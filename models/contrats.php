@@ -1,5 +1,6 @@
 <?php
 require_once("models/ConnectDB.php");
+require_once('./TCPDF/tcpdf.php');
 function getContrats()
 {
     $db = connectToDatabase();
@@ -19,6 +20,21 @@ function getContrats()
     $stm->execute();
     $contrats = $stm->fetchAll();
     return $contrats;
+}
+function getContrat($id)
+{
+    $db = connectToDatabase();
+    $stm = $db->prepare("SELECT c.*, lo.*
+    FROM contrats c
+    JOIN localites lo ON c.localite_id = lo.localite_id WHERE c.client_id=:id and contrat_id=:c_id ORDER BY c.`numero` DESC;
+    ");
+    $stm->bindParam(":c_id", $id);
+    $stm->bindParam(":id", $_SESSION['client']['client_id']);
+    $stm->execute();
+    $contrat = $stm->fetch();
+    $contrat['nom'] = $_SESSION['client']['nom'];
+    $contrat['prenom'] = $_SESSION['client']['prenom'];
+    return $contrat;
 }
 function getActivesContarts()
 {

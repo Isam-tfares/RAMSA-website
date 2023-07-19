@@ -12,14 +12,14 @@ function getLastMessagesC()
 function addMessage()
 {
     if (!isset($_POST['message'])) {
-        RedirectwithPost("index.php#Demandes", 0, "message", "Il y a un erreur Merci de Réssayer");
+        RedirectwithPost("index.php#Réclamations", 0, "message", "Il y a un erreur Merci de Réssayer");
     }
     $message = $_POST['message'];
     $res = insertMessage($message);
     if ($res) {
-        RedirectwithPost("index.php#Demandes", 1, "message", "Votre message est envoyée avec succes");
+        RedirectwithPost("index.php#Réclamations", 1, "message", "Votre réclamation est envoyée avec succes");
     } else {
-        RedirectwithPost("index.php#Demandes", 0, "message", "Il y a un erreur Merci de Réssayer");
+        RedirectwithPost("index.php#Réclamations", 0, "message", "Il y a un erreur Merci de Réssayer");
     }
 }
 

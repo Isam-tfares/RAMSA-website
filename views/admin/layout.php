@@ -64,6 +64,33 @@
         </div>
     </div>
 
+
+    <!-- modal for add admin -->
+    <div class="modal fade" id="admin" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="?page=addAdmin" method="post">
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="form5Example1">Email : </label>
+                            <input type="email" id="form5Example1" class="form-control" name="email" id="" required />
+                        </div>
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="form5Example1">Mot de passe : </label>
+                            <input type="text" id="form5Example1" class="form-control" name="password" id="" required />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block mb-4">Ajouter</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <!-- =========== Scripts =========  -->
     <script src="js/admin_style.js"></script>
     <!-- ====== ionicons ======= -->

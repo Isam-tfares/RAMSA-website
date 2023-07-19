@@ -48,6 +48,40 @@ function addDemandeToDb($type)
     $stm->execute();
     return $stm->rowCount() > 0;
 }
+function addDemandeResiliationToDb($type, $contrat)
+{
+    $db = connectToDatabase();
+    $sql = "INSERT INTO demandes (demande_type_id, client_id,contrat_id) VALUES (:d, :c,:contrat)";
+    $stm = $db->prepare($sql);
+    $stm->bindParam(":contrat", $contrat);
+    $stm->bindParam(":c", $_SESSION['client']['client_id']);
+    $stm->bindParam(":d", $type);
+    $stm->execute();
+    return $stm->rowCount() > 0;
+}
+function addDemandeHistoriqueReleveToDb($type, $debut, $fin)
+{
+    $db = connectToDatabase();
+    $sql = "INSERT INTO demandes (demande_type_id, client_id,historique_date_debut,historique_date_fin) VALUES (:d, :c,:history_debut,:history_fin)";
+    $stm = $db->prepare($sql);
+    $stm->bindParam(":history_debut", $debut);
+    $stm->bindParam(":history_fin", $fin);
+    $stm->bindParam(":c", $_SESSION['client']['client_id']);
+    $stm->bindParam(":d", $type);
+    $stm->execute();
+    return $stm->rowCount() > 0;
+}
+function addDemandeHistoriqueEncaissementToDb($type, $date)
+{
+    $db = connectToDatabase();
+    $sql = "INSERT INTO demandes (demande_type_id, client_id,historique_date) VALUES (:d, :c,:history)";
+    $stm = $db->prepare($sql);
+    $stm->bindParam(":history", $date);
+    $stm->bindParam(":c", $_SESSION['client']['client_id']);
+    $stm->bindParam(":d", $type);
+    $stm->execute();
+    return $stm->rowCount() > 0;
+}
 function getDemandeByTypeandClient($type, $client = null)
 {
     if ($client == null) {

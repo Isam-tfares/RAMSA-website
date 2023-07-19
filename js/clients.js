@@ -16,7 +16,7 @@ window.onscroll = () => {
     profile.classList.remove('active');
 }
 
-//module
+//Demandes
 
 var rter1 = document.querySelector('.rter1');
 var rter2 = document.querySelector('.rter2');
@@ -39,12 +39,25 @@ if (rter1 != null && rter2 != null) {
     });
 }
 
-// let mainImage = document.querySelector('.quick-view .box .row .image-container .main-image img');
-// let subImages = document.querySelectorAll('.quick-view .box .row .image-container .sub-image img');
+//Messages
 
-// subImages.forEach(images => {
-//     images.onclick = () => {
-//         src = images.getAttribute('src');
-//         mainImage.src = src;
-//     }
-// });
+var rter3 = document.querySelector('.rter3');
+var rter4 = document.querySelector('.rter4');
+var lessons2 = document.querySelector('.lessons-block');
+var nv2 = document.querySelector('.nv-block2');
+
+if (rter3 != null && rter4 != null) {
+    rter3.addEventListener("click", () => {
+        rter3.classList.add("active-router");
+        lessons2.classList.remove("disabled-block");
+        rter4.classList.remove("active-router");
+        nv2.classList.add("disabled-block");
+    });
+
+    rter4.addEventListener("click", () => {
+        rter4.classList.add("active-router");
+        nv2.classList.remove("disabled-block");
+        rter3.classList.remove("active-router");
+        lessons2.classList.add("disabled-block");
+    });
+}

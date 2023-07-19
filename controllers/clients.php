@@ -12,9 +12,11 @@ function addClient()
         exit;
     }
 
-    if (isset($_POST['nom']) && !empty($_POST['nom']) && isset($_POST['prenom']) && !empty($_POST['prenom']) && isset($_POST['email']) && !empty($_POST['email']) && isset($_POST['tel']) && !empty($_POST['tel']) && isset($_POST['adresse']) && !empty($_POST['adresse']) && isset($_POST['password']) && !empty($_POST['password'])) {
+    if (isset($_POST['nom']) && !empty($_POST['nom']) && isset($_POST['prenom']) && !empty($_POST['prenom']) && isset($_POST['email']) && !empty($_POST['email']) && isset($_POST['tel']) && !empty($_POST['tel']) && isset($_POST['adresse']) && !empty($_POST['adresse']) && isset($_POST['password']) && !empty($_POST['password']) && !EmailIsExisted($_POST['email'])) {
         $res = insert($_POST);
         RedirectwithPost("?page=clients", $res, "Un client a été ajouté avec succés");
+    } else {
+        RedirectwithPost("?page=clients", 0, "Verifier les données du client");
     }
 }
 

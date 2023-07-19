@@ -34,3 +34,31 @@ function updatePassword($password)
     $stm->execute();
     return $stm->rowCount() > 0;
 }
+function EmailIsExisted($email)
+{
+    $db = connectToDatabase();
+    $stm = $db->prepare("SELECT * FROM clients WHERE email=:e");
+    $stm->bindParam(":e", $email);
+    $stm->execute();
+    if ($stm->rowCount() > 0) {
+        return true;
+    } else {
+        $stm = $db->prepare("SELECT * FROM admin WHERE email=:e");
+        $stm->bindParam(":e", $email);
+        $stm->execute();
+        if ($stm->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+function addAdminToDb($email, $password)
+{
+    $db = connectToDatabase();
+    $stm = $db->prepare("INSERT INTO admin SET email=:e,password=:p");
+    $stm->bindParam(":e", $email);
+    $stm->bindParam(":p", $password);
+    $stm->execute();
+    return $stm->rowCount() > 0;
+}

@@ -56,7 +56,7 @@ ob_start(); ?>
     <div class="card">
         <div>
             <div class="numbers"><?= $nbrMessages ?></div>
-            <div class="cardName">Messages non lues</div>
+            <div class="cardName">Réclamations non lues</div>
         </div>
 
         <div class="iconBx">
@@ -70,7 +70,7 @@ ob_start(); ?>
 <div class="details">
     <div class="activities">
         <div class="cardHeader">
-            <h2>Derniers Messages</h2>
+            <h2>Derniers Réclamations</h2>
             <a href="?page=demandes#messages" class="btn">Voir tous</a>
         </div>
 

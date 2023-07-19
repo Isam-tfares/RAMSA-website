@@ -1,5 +1,5 @@
 <?php
-require_once('../TCPDF/tcpdf.php');
+
 function download($contrat)
 {
     $html = '<header>

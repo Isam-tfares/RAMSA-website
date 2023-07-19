@@ -1,5 +1,5 @@
 <?php
-
+// require_once('./functions.php');
 require_once('../models/ConnectDB.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {

@@ -23,6 +23,7 @@ if (isset($message)) {
         <nav class="navbar1">
             <a href="#home">Accueil</a>
             <a href="#Demandes">Demandes</a>
+            <a href="#Réclamations">Réclamations</a>
             <a href="#Contrats">Contrats</a>
         </nav>
         <div class="icons">

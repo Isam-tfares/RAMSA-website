@@ -395,8 +395,8 @@ ul {
 }
 
 .status.pending {
-    padding: 2px 4px;
-    background: #e9b10a;
+    padding: 4px 7px;
+    background: #f1c02a;
     color: var(--white);
     border-radius: 4px;
     font-size: 14px;

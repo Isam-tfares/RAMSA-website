@@ -49,7 +49,7 @@ $messages = getMessages(); // get Datas from back
                                 <button type="button" class="btn btn-warning text-white border-none" data-bs-toggle="modal" data-bs-target="#traiter<?= $demande['demande_id'] ?>" style="height: 40px !important;">
                                     Traiter
                                 </button>
-                                <!-- Modal add Client -->
+                                <!-- Modal traiter Demande -->
                                 <div class="modal fade" id="traiter<?= $demande['demande_id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -58,6 +58,23 @@ $messages = getMessages(); // get Datas from back
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
+                                                <div class="p-2">
+                                                    <?php if (!empty($demande['historique_date'])) { ?>
+                                                        <div class="my-2">
+                                                            <p style="color: black;text-align:left">Date Correspond : <bold><?= date("M", strtotime($demande['historique_date'])) . " " . date("Y", strtotime($demande['historique_date'])) ?></bold>
+                                                            </p>
+                                                        </div>
+                                                    <?php  } elseif (!empty($demande["historique_date_debut"])) { ?>
+                                                        <div class="my-2">
+                                                            <p style="color: black;text-align:left">De : <bold><?= date("M", strtotime($demande['historique_date_debut'])) . " " . date("Y", strtotime($demande['historique_date_debut'])) ?></bold>
+                                                            </p>
+                                                        </div>
+                                                        <div class="my-2">
+                                                            <p style="color: black;text-align:left">A : <bold><?= date("M", strtotime($demande['historique_date_fin'])) . " " . date("Y", strtotime($demande['historique_date_fin'])) ?></bold>
+                                                            </p>
+                                                        </div>
+                                                    <?php } ?>
+                                                </div>
                                                 <form action="?page=traiterDemande" method="post" enctype="multipart/form-data">
                                                     <input type="hidden" name="demande_id" value="<?= $demande['demande_id'] ?>">
 
@@ -80,38 +97,7 @@ $messages = getMessages(); // get Datas from back
             </tbody>
         </table>
 
-        <!-- messages Students -->
-        <h2 class="fw-bold mt-5 mb-0 text-center">Boite de reception</h2>
-        <table class="border-top" id="messages">
-            <thead>
-                <tr>
-                    <td>Nom Complet</td>
-                    <td class="text-start">Message</td>
-                    <td class="text-center">Action</td>
-                </tr>
-            </thead>
 
-            <tbody id="">
-                <?php foreach ($messages as $message) { ?>
-                    <tr>
-                        <td><?= $message['nom'] . " " . $message['prenom'] ?></td>
-                        <td class="text-start"><?= $message['message_content'] ?></td>
-                        <td class="d-flex justify-content-evenly py-2">
-                            <?php if ($message['message_statut'] == 0) { ?>
-                                <form action="?page=updateMessage" method="post" class="mx-2">
-                                    <input type="hidden" name="message_id" value="<?= $message['message_id'] ?>">
-                                    <button type="submit" class="status btn delivered border-none" style="width: 70px;">Recu <i class="bi bi-check-lg"></i></button>
-                                </form>
-                            <?php } ?>
-                            <form action="?page=deleteMessage" method="post">
-                                <input type="hidden" name="message_id" value="<?= $message['message_id'] ?>">
-                                <button type="submit" class="status btn return border-none" onclick="return confirm('Êtes-vous sûr de vouloir Supprimer ce message ?');">Supprimer</button>
-                            </form>
-                        </td>
-                    </tr>
-                <?php } ?>
-            </tbody>
-        </table>
     </div>
 </div>
 

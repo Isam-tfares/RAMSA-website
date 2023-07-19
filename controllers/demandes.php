@@ -14,15 +14,34 @@ function addDemande()
     $type = $_POST['type'];
     if (getDemandeByTypeandClient($type)) {
         RedirectwithPost("index.php#Demandes", 0, "demande", "Vous avez déja demander ce service");
-    }
-    $res = addDemandeToDb($type);
-    if ($res) {
-        RedirectwithPost("index.php#Demandes", 1, "demande", "Votre demande est envoyée avec succes");
     } else {
-        RedirectwithPost("index.php#Demandes", 0, "demande", "Il y a un erreur Merci de Réssayer");
+        $demande_type = get($type);
+        if ($demande_type['contrat_id']) {
+            if (!isset($_POST['contrat_id']) || !isHisContrat($_POST['contrat_id'])) {
+                Redirect("index.php#Demandes");
+            }
+            $res = addDemandeResiliationToDb($type, $_POST['contrat_id']);
+        } elseif ($demande_type['historique_date']) {
+            if (!isset($_POST['historique_date']) || empty($_POST['historique_date'])) {
+                Redirect("index.php#Demandes");
+            }
+            $res = addDemandeHistoriqueEncaissementToDb($type, $_POST['historique_date']);
+        } elseif ($demande_type['historique_date_debut']) {
+            if (!isset($_POST['historique_date_debut']) || empty($_POST['historique_date_debut']) || !isset($_POST['historique_date_fin']) || empty($_POST['historique_date_fin'])) {
+                Redirect("index.php#Demandes");
+            }
+            $res = addDemandeHistoriqueReleveToDb($type, $_POST['historique_date_debut'], $_POST['historique_date_fin']);
+        } else {
+            $res = addDemandeToDb($type);
+        }
+        if ($res) {
+            RedirectwithPost("index.php#Demandes", 1, "demande", "Votre demande est envoyée avec succes");
+        } else {
+            RedirectwithPost("index.php#Demandes", 0, "demande", "Il y a un erreur Merci de Réssayer");
+        }
     }
 }
-function traiterDemande()    // add file path
+function traiterDemande()
 {
     if (!isset($_SESSION['admin'])) {
         header("location:index.php");

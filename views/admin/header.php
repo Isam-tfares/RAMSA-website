@@ -31,20 +31,28 @@
         <li>
             <a href="?page=demandes">
                 <span class="icon">
-                    <i class="bi bi-building"></i>
+                    <i class="bi bi-journals"></i>
                 </span>
                 <span class="title">Demandes</span>
             </a>
         </li>
-
         <li>
+            <a href="?page=reclamations">
+                <span class="icon">
+                    <i class="bi bi-file-earmark-text"></i>
+                </span>
+                <span class="title">Réclamations</span>
+            </a>
+        </li>
+
+        <!-- <li>
             <a href="?page=demandesTypes">
                 <span class="icon">
                     <i class="bi bi-building"></i>
                 </span>
                 <span class="title">Types des demandes</span>
             </a>
-        </li>
+        </li> -->
 
         <li>
             <a href="?page=contrats">
@@ -54,7 +62,33 @@
                 <span class="title">Contrats</span>
             </a>
         </li>
+        <li>
+            <a href="?page=consommations">
+                <span class="icon">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                </span>
+                <span class="title">Consommations</span>
+            </a>
 
+        </li>
+        <li>
+            <a href="?page=factures">
+                <span class="icon">
+                    <i class="bi bi-receipt"></i>
+                </span>
+                <span class="title">Factures</span>
+            </a>
+
+        </li>
+
+        <li>
+            <a type="button" class="text-white pass" data-bs-toggle="modal" data-bs-target="#admin">
+                <span class="icon">
+                    <i class="bi bi-person-gear"></i>
+                </span>
+                <span class="title">Ajouter Admin</span>
+            </a>
+        </li>
         <li>
             <a type="button" class="text-white pass" data-bs-toggle="modal" data-bs-target="#password">
                 <span class="icon">

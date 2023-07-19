@@ -48,3 +48,15 @@ function changePassword()
         Redirect("index.php");
     }
 }
+function addAdmin()
+{
+    if (!isset($_SESSION['admin'])) {
+        Redirect("index.php");
+    }
+    if (isset($_POST['email']) && !empty($_POST['email']) && isset($_POST['password']) && !empty($_POST['password']) && !EmailIsExisted($_POST['email'])) {
+        $res = addAdminToDb($_POST['email'], sha1($_POST['password']));
+        RedirectwithPost("index.php", $res, "Nouveau admin est ajoutée avec success");
+    } else {
+        Redirect("index.php");
+    }
+}

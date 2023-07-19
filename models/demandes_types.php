@@ -8,6 +8,15 @@ function getDemandesTypes()
     $demandes_types = $stm->fetchAll();
     return $demandes_types;
 }
+function get($id)
+{
+    $db = connectToDatabase();
+    $stm = $db->prepare("SELECT * FROM demandes_types WHERE demande_type_id=:id");
+    $stm->bindParam(":id", $id);
+    $stm->execute();
+    $demandes_type = $stm->fetch();
+    return $demandes_type;
+}
 function getDemandesIds()
 {
     $demandes = getDemandesTypes();

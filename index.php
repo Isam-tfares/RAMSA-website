@@ -8,6 +8,8 @@ require("controllers/demandes.php");
 require("controllers/messages.php");
 require("controllers/demandesTypes.php");
 require("controllers/contrats.php");
+require("controllers/consommations.php");
+require("controllers/factures.php");
 require("models/demandes_types.php");
 require("models/localites.php");
 
@@ -21,7 +23,7 @@ if (isset($_POST['logout'])) {
 // pages of admin
 
 if (isset($_SESSION['admin'])) {
-    $pages = ['home', 'clients', 'demandes', 'contrats', 'demandesTypes'];
+    $pages = ['home', 'clients', 'reclamations', 'demandes', 'contrats', 'demandesTypes', 'consommations', 'factures'];
     $page = "home";
     if (isset($_GET['page'])) {
         $page = $_GET['page'];
@@ -65,6 +67,22 @@ if (isset($_SESSION['admin'])) {
                 break;
             case "deleteDemandeType":
                 deleteDemandeType();
+                break;
+            case "addAdmin":
+                addAdmin();
+                break;
+            case "addConsommation":
+                addConsommation();
+                break;
+            case "editConsommation":
+                editConsommation();
+                break;
+            case "editFacture":
+                editFacture();
+                break;
+            case "deleteFacture":
+                deleteFacture();
+                break;
             default:
                 include('views/admin/home.php');
         }
@@ -79,6 +97,9 @@ if (isset($_SESSION['admin'])) {
                 break;
             case "addMessage":
                 addMessage();
+                break;
+            case "dContrat":
+                downloadContrat();
                 break;
             default:
                 include('views/clients/home.php');
