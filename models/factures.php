@@ -1,6 +1,15 @@
 <?php
 require_once('./models/ConnectDB.php');
 
+function getFacture($facture_id)
+{
+    $db = connectToDatabase();
+    $stm = $db->prepare("SELECT * FROM factures WHERE facture_id=:id");
+    $stm->bindParam(":id", $facture_id);
+    $stm->execute();
+    $result = $stm->fetch();
+    return $result;
+}
 function insertFacture($montant, $consommation, $contrat)
 {
     $db = connectToDatabase();
@@ -30,7 +39,12 @@ function getAllFacturesDB($year, $month)
 function updateFacture($facture_id, $etat)
 {
     $db = connectToDatabase();
-    $stm = $db->prepare("UPDATE `factures` SET `etat`=:etat,facture_payement_date=now() WHERE `facture_id`=:id");
+    if ($etat) {
+        $stm = $db->prepare("UPDATE `factures` SET `etat`=:etat,facture_payement_date=now() WHERE `facture_id`=:id");
+    } else {
+        $stm = $db->prepare("UPDATE `factures` SET `etat`=:etat,facture_payement_date=NULL WHERE `facture_id`=:id");
+    }
+
     $stm->bindParam(":id", $facture_id);
     $stm->bindParam(":etat", $etat);
     $stm->execute();

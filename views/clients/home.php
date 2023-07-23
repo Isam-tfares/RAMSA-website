@@ -1,9 +1,11 @@
 <?php
 // get Datas
 $demandes_types = getDemandesTypes();
-$demandes = getDemandes();
-$messages = getMessages();
+[$demandes, $demandes2] = getDemandes();
+$reclamations = getMessages();
 $contrats = getContratsC();
+$allContrats = getContratsCAll();
+$localites = getLocalities();
 
 if (isset($_POST['id'])) {
     if ($_POST['message'] == "demande") {
@@ -151,94 +153,31 @@ if (isset($_POST['id'])) {
                                                 <h1 class="title"><?= $demande['demande_name'] ?></h1>
                                             </div>
 
-                                            <?php if ($demande['contrat_id']) { ?>
-                                                <button type="button" data-bs-toggle="modal" data-bs-target="#demanderResiliation" class="btn btn-outline-primary w-50 Demander" style="font-size: 12px;font-weight: bold;">
+                                            <?php if ($demande['contrat']) { ?>
+                                                <button type="button" data-bs-toggle="modal" data-bs-target="#demander<?= $demande['demande_type_id'] ?>" class="btn btn-outline-primary w-50 Demander" style="font-size: 12px;font-weight: bold;">
                                                     Demander
                                                 </button>
                                                 <!-- Modal demander Resiliation -->
-                                                <div class="modal fade" id="demanderResiliation" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal fade" id="demander<?= $demande['demande_type_id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class="modal-title" id="exampleModalLabel" style="color:black;font-size:2rem">Demande de Resiliation</h5>
+                                                                <h5 class="modal-title" id="exampleModalLabel" style="color:black;font-size:2rem"><?= $demande['demande_name'] ?></h5>
                                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="font-size:2rem"></button>
                                                             </div>
                                                             <div class="modal-body">
                                                                 <form action="?page=addDemande" method="post">
                                                                     <input type="hidden" name="type" value="<?= $demande['demande_type_id'] ?>">
 
-                                                                    <div class="my-2">
-                                                                        <p style="color: black;text-align:left;font-size:2rem">Choisir le contrat</p>
+                                                                    <div class="form-outline mb-4">
+                                                                        <label class="form-label text-dark text-start" for="form5Example1" style="color: black;text-align:left;font-size:2rem">Adresse corespondant</label>
+                                                                        <select name="contrat_id" id="selectMounth" class="form-select w-75" aria-label="Default select example" style="height: 40px !important;color: black;text-align:left;font-size:2rem">
+                                                                            <?php foreach ($contrats as $contrat) { ?>
+                                                                                <option value="<?= $contrat['contrat_id'] ?>" style="font-size:2rem"><?= $contrat['adresse_local'] ?></option>
+                                                                            <?php } ?>
+                                                                        </select>
                                                                     </div>
-                                                                    <select name="contrat_id" id="" style="font-size:2rem">
-                                                                        <?php foreach ($contrats as $contrat) { ?>
-                                                                            <option value="<?= $contrat['contrat_id'] ?>" style="font-size:2rem"><?= $contrat['adresse_local'] ?></option>
-                                                                        <?php } ?>
-                                                                    </select>
-                                                                    <div>
-                                                                        <button type="submit" class="btn btn-primary w-25 mt-5 text-white border-none" onclick="return confirm('Êtes-vous sûr de vouloir demande ce service ?');" style="font-size:2rem">Demander</button>
-                                                                    </div>
-                                                                </form>
 
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            <?php } elseif ($demande['historique_date']) { ?>
-                                                <button type="button" data-bs-toggle="modal" data-bs-target="#demanderEncaissement" class="btn btn-outline-primary w-50 Demander" style="font-size: 12px;font-weight: bold;">
-                                                    Demander
-                                                </button>
-                                                <!-- Modal demander Historique Encaissement -->
-                                                <div class="modal fade" id="demanderEncaissement" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="exampleModalLabel" style="color:black;font-size:2rem">HISTORIQUE DE L'ENCAISSEMENT</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="font-size:2rem"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <form action="?page=addDemande" method="post">
-                                                                    <input type="hidden" name="type" value="<?= $demande['demande_type_id'] ?>">
-
-                                                                    <div class="my-2">
-                                                                        <p style="color: black;text-align:left;font-size:2rem">Choisir la date correspond</p>
-                                                                    </div>
-                                                                    <input type="date" style="font-size:2rem" name="hsitorique_date" id="">
-                                                                    <div>
-                                                                        <button type="submit" class="btn btn-primary w-25 mt-5 text-white border-none" onclick="return confirm('Êtes-vous sûr de vouloir demande ce service ?');" style="font-size:2rem">Demander</button>
-                                                                    </div>
-                                                                </form>
-
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            <?php } elseif ($demande['historique_date_debut']) { ?>
-                                                <button type="button" data-bs-toggle="modal" data-bs-target="#demanderReleve" class="btn btn-outline-primary w-50 Demander" style="font-size: 12px;font-weight: bold;">
-                                                    Demander
-                                                </button>
-                                                <!-- Modal demander Historique Relevé -->
-                                                <div class="modal fade" id="demanderReleve" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="exampleModalLabel" style="color:black;font-size:2rem">HISTORIQUE DE RELEVÉ</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="font-size:2rem"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <form action="?page=addDemande" method="post">
-                                                                    <input type="hidden" name="type" value="<?= $demande['demande_type_id'] ?>">
-
-                                                                    <div class="my-2">
-                                                                        <p style="color: black;text-align:left;font-size:2rem">De</p>
-                                                                    </div>
-                                                                    <input type="date" style="font-size:2rem" name="historique_date_debut" id="">
-                                                                    <div class="my-2">
-                                                                        <p style="color: black;text-align:left;font-size:2rem">A</p>
-                                                                    </div>
-                                                                    <input type="date" style="font-size:2rem" name="historique_date_fin" id="">
                                                                     <div>
                                                                         <button type="submit" class="btn btn-primary w-25 mt-5 text-white border-none" onclick="return confirm('Êtes-vous sûr de vouloir demande ce service ?');" style="font-size:2rem">Demander</button>
                                                                     </div>
@@ -250,12 +189,45 @@ if (isset($_POST['id'])) {
                                                     </div>
                                                 </div>
                                             <?php } else { ?>
-                                                <form action="?page=addDemande" method="post" class="content">
-                                                    <input type="hidden" name="type" value="<?= $demande['demande_type_id'] ?>">
-                                                    <div class="d-flex flex justify-content-center align-items-center">
-                                                        <button type="submit" class="btn btn-outline-primary w-50 Demander" style="font-size: 12px;font-weight: bold;">Demander</button>
+                                                <button type="button" data-bs-toggle="modal" data-bs-target="#demander<?= $demande['demande_type_id'] ?>" class="btn btn-outline-primary w-50 Demander" style="font-size: 12px;font-weight: bold;">
+                                                    Demander
+                                                </button>
+
+                                                <div class="modal fade" id="demander<?= $demande['demande_type_id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel" style="color:black;font-size:2rem">Demande d'abonnement</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="font-size:2rem"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form action="?page=addDemande" method="post">
+                                                                    <input type="hidden" name="type" value="<?= $demande['demande_type_id'] ?>">
+
+                                                                    <div class="form-outline my-4">
+                                                                        <label class="form-label text-dark text-start" for="form5Example1" style="color: black;text-align:left;font-size:2rem">Entrer Votre adresse local</label>
+                                                                        <input class="form-control" type="text" name="adresse" id="" style="color: black;text-align:left;font-size:2rem" required>
+                                                                    </div>
+                                                                    <div class="form-outline my-4">
+                                                                        <label class="form-label text-dark text-start" for="form5Example1" style="color: black;text-align:left;font-size:2rem">Selectionner Localité</label>
+                                                                        <select name="localite_id" id="selectMounth" class="form-select w-100" aria-label="Default select example" style="height: 40px !important;color: black;text-align:left;font-size:2rem">
+                                                                            <?php foreach ($localites as $localite) { ?>
+                                                                                <option value="<?= $localite['localite_id'] ?>" style="font-size:2rem"><?= $localite['localite_name'] ?></option>
+                                                                            <?php } ?>
+                                                                        </select>
+                                                                    </div>
+
+                                                                    <div>
+                                                                        <button type="submit" class="btn btn-primary w-25 mt-5 text-white border-none" onclick="return confirm('Êtes-vous sûr de vouloir demande ce service ?');" style="font-size:2rem">Demander</button>
+                                                                    </div>
+                                                                </form>
+
+                                                            </div>
+
+                                                        </div>
                                                     </div>
-                                                </form>
+                                                </div>
+
                                             <?php } ?>
                                         </div>
                                     </div>
@@ -278,18 +250,46 @@ if (isset($_POST['id'])) {
                     <div class="row m-0 container-fluid">
                         <?php foreach ($demandes as $demande) { ?>
                             <div class="col-3 col-lg-3  bg-white  bdr ps-3"><?= $demande['demande_name'] ?></div>
-                            <div class="col-3 col-lg-3 bg-white text-center bdr"><?= $demande['date'] ?></div>
+                            <div class="col-3 col-lg-3 bg-white text-center bdr"><?= $demande['demande_date'] ?></div>
                             <?php if ($demande['etat'] == '1') { ?>
-                                <div class="col-3 col-lg-3 text-center bdr bg-whitz text-success fw-bold">Traité</div>
+                                <div class="col-3 col-lg-3 text-center bdr bg-white text-success fw-bold">Traité</div>
                                 <div class="col-3 col-lg-3 text-center bdr bg-white ">
+                                    <?php if ($demande['demande_type_id'] == 5) { ?> <!-- Contrats -->
+                                        <form class="col ps-0 text-end pe-0" action="assets/Contrats/<?php echo $demande["file_path"]; ?>" method="get" target="_blank" style="display: flex;justify-content: space-around;">
+                                            <button type="submit" class="btn btn-primary w-md-50" style="font-size: 1.6rem;"> Télécharger</button>
+                                        </form>
+                                    <?php } elseif ($demande['demande_type_id'] == 3 || $demande['demande_type_id'] == 4) { ?> <!-- Encaissements -->
+                                        <form class="col ps-0 text-end pe-0" action="" method="POST" target="_blank" style="display: flex;justify-content: space-around;">
+                                            <input type="hidden" name="demande_id" value="<?= $demande['demande_id'] ?>">
+                                            <button type="submit" class="btn btn-primary w-md-50" style="font-size: 1.6rem;"> Voir</button>
+                                        </form>
+                                        <!-- <form class="col ps-0 text-end pe-0" action="assets/Demandes/<?php echo $demande["file_path"]; ?>" method="get" target="_blank" style="display: flex;justify-content: space-around;">
+                                            <button type="submit" class="btn btn-primary w-md-50" style="font-size: 1.6rem;"> Télécharger</button>
+                                        </form> -->
+                                    <?php } ?>
 
-                                    <form class="col ps-0 text-end pe-0" action="assets/Demandes/<?php echo $demande["file_path"]; ?>" method="get" target="_blank" style="display: flex;justify-content: space-around;">
-                                        <button type="submit" class="btn btn-primary w-md-50" style="font-size: 1.6rem;"> Télécharger</button>
-                                    </form>
                                 </div>
                             <?php } else { ?>
                                 <div class="col-3 col-lg-3 text-center bdr text-warning fw-bold bg-white">Non Traité</div>
                                 <div class="col-3 col-lg-3 text-center bdr bg-white"><button class="btn btn-primary w-md-50" style="font-size: 1.6rem;" disabled>Télécharger</button></div>
+                            <?php } ?>
+                        <?php } ?>
+
+                        <!-- Demandes d'Abonnement -->
+
+                        <?php foreach ($demandes2 as $demande) { ?>
+                            <div class="col-3 col-lg-3  bg-white  bdr ps-3">Demande d'abonnement</div>
+                            <div class="col-3 col-lg-3 bg-white text-center bdr"><?= $demande['demande_date'] ?></div>
+                            <?php if ($demande['etat'] == '1') { ?>
+                                <div class="col-3 col-lg-3 text-center bdr bg-white text-success fw-bold">Traité</div>
+                                <div class="col-3 col-lg-3 text-center bdr bg-white ">
+
+
+                                </div>
+                            <?php } else { ?>
+                                <div class="col-3 col-lg-3 text-center bdr text-warning fw-bold bg-white">Non Traité</div>
+                                <div class="col-3 col-lg-3 text-center bdr bg-white">
+                                </div>
                             <?php } ?>
                         <?php } ?>
 
@@ -379,7 +379,7 @@ if (isset($_POST['id'])) {
                         <div class="col-4 col-lg-4 text-center bdr fw-bold bg-light title1">Etat</div>
                     </div>
                     <div class="row m-0 container-fluid">
-                        <?php foreach ($messages as $message) { ?>
+                        <?php foreach ($reclamations as $message) { ?>
                             <div class="col-4 col-lg-4  bg-white  bdr ps-3" style="height:100px;overflow-y:auto"><?= $message['message_content'] ?></div>
                             <div class="col-4 col-lg-4 bg-white text-center bdr"><?= $message['message_date'] ?></div>
                             <?php if ($message['message_statut'] == '1') { ?>
@@ -412,16 +412,12 @@ if (isset($_POST['id'])) {
                         <div class="col-3 col-lg-3 text-center bdr fw-bold bg-light title1">Action</div>
                     </div>
                     <div class="row m-0 container-fluid">
-                        <?php foreach ($contrats as $contrat) { ?>
+                        <?php foreach ($allContrats as $contrat) { ?>
                             <div class="col-3 col-lg-3  bg-white  bdr ps-3">Contrat n<?= $contrat['numero'] ?></div>
                             <div class="col-3 col-lg-3 bg-white text-center bdr"><?= $contrat['date_de_debut'] ?></div>
                             <div class="col-3 col-lg-3 bg-white text-center bdr"><?= $contrat['date_de_fin'] ?></div>
                             <div class="col-3 col-lg-3 text-center bdr bg-white">
-                                <form action="?page=dContrat" method="post">
-                                    <input type="hidden" name="contrat_id" value="<?= $contrat['contrat_id'] ?>">
-                                    <button class="btn btn-primary w-md-50" style="font-size: 1.6rem;margin-top:0">Télécharger</button>
-                                </form>
-
+                                <?= $contrat['adresse_local'] . ' ' . $contrat['localite_name'] ?>
                             </div>
                         <?php } ?>
 

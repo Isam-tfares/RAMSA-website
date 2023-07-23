@@ -111,3 +111,23 @@ function updateConsommation($id, $index2)
     $stm->execute();
     return $stm->rowCount() > 0;
 }
+function getHistoriqueConsommationsOfClient($contrat_id)
+{
+    $db = connectToDatabase();
+    $stm = $db->prepare("SELECT
+    consommations.*,contrats.*,clients.nom,clients.prenom,localites.localite_name
+FROM
+    consommations
+JOIN contrats ON contrats.contrat_id=consommations.contrat_id
+JOIN clients ON clients.client_id=contrats.client_id
+JOIN localites ON contrats.localite_id=localites.localite_id
+WHERE
+consommations.contrat_id = :contrat_id
+    AND (( consommations.consommation_annee = YEAR(CURDATE()) AND consommations.consommation_mois <= MONTH(CURDATE()) )
+    OR ( consommations.consommation_annee = (YEAR(CURDATE())-1) AND consommations.consommation_mois >= MONTH(CURDATE()) ))
+    ORDER BY consommations.consommation_id");
+    $stm->bindParam(":contrat_id", $contrat_id);
+    // $stm->bindParam(":year", $year);
+    $stm->execute();
+    return $stm->fetchAll();
+}

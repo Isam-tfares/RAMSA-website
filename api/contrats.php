@@ -15,20 +15,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $client_id = $data['client_id'];
         if (checkToken($client_id, $token)) {
             // Valid token, proceed with retrieving contrats
-            $sql = "SELECT contrats.*, localites.* FROM contrats, localites WHERE localites.localite_id=contrats.localite_id AND contrats.client_id=:id AND contrats.etat=1";
-            $stmt = connectToDatabase()->prepare($sql);
-            $stmt->bindParam(":id", $client_id);
-            $stmt->execute();
-
-            $contrats = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            if (count($contrats) > 0) {
+            if (isset($data["contrat_id"])) {
+                $sql = "SELECT contrats.*, localites.* FROM contrats, localites WHERE localites.localite_id=contrats.localite_id AND contrats.client_id=:id AND contrats.etat=1 AND contrats.contrat_id=:c";
+                $stmt = connectToDatabase()->prepare($sql);
+                $stmt->bindParam(":id", $client_id);
+                $stmt->bindParam(":c", $data['contrat_id']);
+                $stmt->execute();
+                $contrats = $stmt->fetch(PDO::FETCH_ASSOC);
                 $response = json_encode($contrats);
                 header('Content-Type: application/json');
                 echo $response;
             } else {
-                header('Content-Type: application/json');
-                echo json_encode([]);
+                $sql = "SELECT contrats.*, localites.* FROM contrats, localites WHERE localites.localite_id=contrats.localite_id AND contrats.client_id=:id AND contrats.etat=1";
+                $stmt = connectToDatabase()->prepare($sql);
+                $stmt->bindParam(":id", $client_id);
+                $stmt->execute();
+
+                $contrats = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                if (count($contrats) > 0) {
+                    $response = json_encode($contrats);
+                    header('Content-Type: application/json');
+                    echo $response;
+                } else {
+                    header('Content-Type: application/json');
+                    echo json_encode([]);
+                }
             }
         } else {
             header('Content-Type: application/json');

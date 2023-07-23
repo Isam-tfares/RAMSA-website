@@ -80,6 +80,15 @@
             </a>
 
         </li>
+        <li>
+            <a href="?page=encaissements">
+                <span class="icon">
+                    <i class="bi bi-wallet2"></i>
+                </span>
+                <span class="title">Encaissemets</span>
+            </a>
+
+        </li>
 
         <li>
             <a type="button" class="text-white pass" data-bs-toggle="modal" data-bs-target="#admin">

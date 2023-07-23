@@ -8,12 +8,13 @@ function getContrats()
         $stm = $db->prepare("SELECT c.*, cl.*, lo.*
     FROM contrats c
     JOIN clients cl ON cl.client_id = c.client_id
-    JOIN localites lo ON c.localite_id = lo.localite_id;
+    JOIN localites lo ON c.localite_id = lo.localite_id
+    WHERE c.etat=1;
     ");
     } else {
         $stm = $db->prepare("SELECT c.*, lo.*
     FROM contrats c
-    JOIN localites lo ON c.localite_id = lo.localite_id WHERE c.client_id=:id ORDER BY c.`numero` DESC;
+    JOIN localites lo ON c.localite_id = lo.localite_id WHERE c.client_id=:id and c.etat=1 ORDER BY c.`numero` DESC;
     ");
         $stm->bindParam(":id", $_SESSION['client']['client_id']);
     }
@@ -21,20 +22,45 @@ function getContrats()
     $contrats = $stm->fetchAll();
     return $contrats;
 }
-function getContrat($id)
+function getContratsCAllDB()
 {
     $db = connectToDatabase();
     $stm = $db->prepare("SELECT c.*, lo.*
     FROM contrats c
-    JOIN localites lo ON c.localite_id = lo.localite_id WHERE c.client_id=:id and contrat_id=:c_id ORDER BY c.`numero` DESC;
+    JOIN localites lo ON c.localite_id = lo.localite_id WHERE c.client_id=:id  ORDER BY c.`numero` DESC;
     ");
-    $stm->bindParam(":c_id", $id);
     $stm->bindParam(":id", $_SESSION['client']['client_id']);
     $stm->execute();
-    $contrat = $stm->fetch();
-    $contrat['nom'] = $_SESSION['client']['nom'];
-    $contrat['prenom'] = $_SESSION['client']['prenom'];
-    return $contrat;
+    $contrats = $stm->fetchAll();
+    return $contrats;
+}
+function getContrat($id)
+{
+    $db = connectToDatabase();
+    if (isset($_SESSION['client']['prenom'])) {
+        $stm = $db->prepare("SELECT c.*, lo.*
+        FROM contrats c
+        JOIN localites lo ON c.localite_id = lo.localite_id WHERE c.client_id=:id and contrat_id=:c_id ORDER BY c.`numero` DESC;
+        ");
+        $stm->bindParam(":c_id", $id);
+        $stm->bindParam(":id", $_SESSION['client']['client_id']);
+        $stm->execute();
+        $contrat = $stm->fetch();
+        $contrat['nom'] = $_SESSION['client']['nom'];
+        $contrat['prenom'] = $_SESSION['client']['prenom'];
+        return $contrat;
+    } else {
+        $stm = $db->prepare("SELECT c.*, lo.*,cl.nom,cl.prenom,cl.email
+        FROM contrats c
+        JOIN localites lo ON c.localite_id = lo.localite_id
+        JOIN clients cl ON cl.client_id=c.client_id
+        WHERE contrat_id=:c_id ;
+        ");
+        $stm->bindParam(":c_id", $id);
+        $stm->execute();
+        $contrat = $stm->fetch();
+        return $contrat;
+    }
 }
 function getActivesContarts()
 {
@@ -89,6 +115,22 @@ function updateContrat($data)
     $stm->bindParam(":adresse", $data['adresse']);
     $stm->bindParam(":localite", $data['localite']);
     $stm->bindParam(":id", $data['contrat_id']);
+    $stm->execute();
+    return $stm->rowCount() > 0;
+}
+function isExistedAdresse($adresse)
+{
+    $db = connectToDatabase();
+    $stm = $db->prepare("SELECT * from contrats where adresse_local=:adresse and etat=1");
+    $stm->bindParam(":adresse", $adresse);
+    $stm->execute();
+    return $stm->rowCount() > 0;
+}
+function Resiliation($contrat_id)
+{
+    $db = connectToDatabase();
+    $stm = $db->prepare("UPDATE `contrats` SET etat=0,date_de_fin=now() WHERE `contrat_id`=:id");
+    $stm->bindParam(":id", $contrat_id);
     $stm->execute();
     return $stm->rowCount() > 0;
 }

@@ -15,7 +15,7 @@ if (isset($message)) {
 
     <section class="flex1">
 
-        <a href="home.php" class="logo d-flex align-items-center justify-content-center">
+        <a href="#home" class="logo d-flex align-items-center justify-content-center">
             <img src="assets/imgs/ramsa-logo.png" width="50px" height="50px" alt="">
             <span>RAMSA</span>
         </a>

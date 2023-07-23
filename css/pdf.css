@@ -1,0 +1,95 @@
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    width: 200px;
+    margin: 0 auto;
+}
+
+.imgHeader {
+    width: 150px;
+}
+
+.main {
+    padding: 20px;
+    width: 80%;
+    margin: 0 auto;
+    height: 1000px;
+}
+
+.date {
+    display: flex;
+    flex-direction: row-reverse;
+    font-weight: bolder;
+    color: .000f6c;
+}
+
+.data {
+    font-size: 14px;
+}
+
+.data .dataD {
+    padding-bottom: 5px;
+}
+
+.footer {
+    background-color: #5caddc;
+    padding: 5px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    color: black
+}
+
+.footerC {
+    text-align: center;
+    color: .000f6c;
+}
+
+.Fp {
+    font-weight: bold;
+    font-size: 18px;
+    margin: 0;
+    color: black;
+}
+
+.para {
+    margin: 0;
+    color: black;
+}
+
+.rs {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    justify-content: space-evenly;
+    font-size: 7px;
+}
+
+.rs div {
+    align-items: center;
+    display: inline;
+    color: black;
+}
+
+.rs img {
+    width: 15px
+}
+
+.rs p {
+    display: inline;
+}
+
+.bd {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.facebook {
+    margin-top: 15px;
+}

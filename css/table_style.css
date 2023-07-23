@@ -1,0 +1,27 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table,
+th,
+td {
+    border: 1px solid black;
+}
+
+th,
+td {
+    padding: 20px;
+    text-align: left;
+    border: 1px solid black;
+}
+
+.imgHeader {
+    width: 100px;
+
+}
+
+.header {
+    width: 150px;
+    margin: 0 auto;
+}

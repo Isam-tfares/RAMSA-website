@@ -21,7 +21,7 @@ if (isset($_POST['year']) && !empty($_POST['year'])) {
 } else {
     $factures = getAllFactures($lastMonthYear, $lastMonthNumber);
 }
-
+$modes_payement = getModes();
 $title = "Factures" ?>
 <?php ob_start(); ?>
 
@@ -92,35 +92,52 @@ $title = "Factures" ?>
                         <td class=" py-1 m-1 px-2 "><?= $facture['etat'] ? "payée" : "impayée" ?></td>
                         <td>
                             <div class="d-flex justify-content-evenly py-2 align-items-center">
-                                <button type="button" class="status btn delivered border-none mx-2" data-bs-toggle="modal" data-bs-target="#editFacture<?= $facture['facture_id'] ?>">
-                                    Modifier
-                                </button>
+                                <?php if (!$facture['etat']) { ?>
+                                    <button type="button" class="status btn delivered border-none mx-2 px-3" data-bs-toggle="modal" data-bs-target="#payer<?= $facture['facture_id'] ?>">
+                                        Payer
+                                    </button>
 
+                                <?php } else { ?>
+                                    <form action="?page=impayFacture" method="post">
+                                        <input type="hidden" name="facture_id" value="<?= $facture['facture_id'] ?>">
+                                        <button type="submit" class="status btn pending border-none mx-2">Impayer</button>
+                                    </form>
+                                <?php } ?>
                                 <form action="?page=deleteFacture" method="post">
                                     <input type="hidden" name="facture_id" value="<?= $facture['facture_id'] ?>">
                                     <button type="submit" class="status btn return border-none mx-2">Supprimer</button>
                                 </form>
                             </div>
                         </td>
-                        <!-- Modal edit Facture -->
-                        <div class="modal fade" id="editFacture<?= $facture['facture_id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <!-- Modal Payer Facture -->
+                        <div class="modal fade" id="payer<?= $facture['facture_id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title text-dark" id="exampleModalLabel">Modifier La Facture N° <?= $facture['facture_id'] ?> du <?= $facture['nom'] . " " . $facture['prenom'] ?></h5>
+                                        <h5 class="modal-title text-dark" id="exampleModalLabel">Payer la facture N° <?= $facture['facture_id'] ?> du <?= $facture['nom'] . " " . $facture['prenom'] ?></h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="?page=editFacture" method="post">
-                                            <input type="hidden" name="facture_id" id="" value="<?= $facture['facture_id'] ?>">
+                                        <form action="?page=payFacture" method="post">
                                             <div class="form-outline mb-4">
-                                                <label class="form-label text-dark text-start" for="form5Example1" style="text-align: left !important;">Etat </label>
-                                                <select name="etat" id="selectMounth" class="form-select w-75" aria-label="Default select example" style="height: 40px !important;">
-                                                    <option value="1" <?= $facture['etat'] ? "selected" : "" ?>>Payée</option>
-                                                    <option value="0" <?= $facture['etat'] ? "" : "selected" ?>>Impayée</option>
+                                                <label class="form-label text-dark text-start" for="form5Example1" style="text-align: left !important;">Montant</label>
+                                                <div class="form-control"><?= $facture['montant'] ?> DH</div>
+                                            </div>
+                                            <input type="hidden" name="facture_id" value="<?= $facture['facture_id'] ?>">
+                                            <div class="form-outline mb-4">
+                                                <label class="form-label text-dark text-start" for="form5Example1" style="text-align: left !important;">Mode de réglement </label>
+                                                <select name="mode_payement" id="selectMounth" class="form-select w-75" aria-label="Default select example" style="height: 40px !important;">
+                                                    <?php foreach ($modes_payement as $mode) { ?>
+                                                        <option value="<?= $mode['mode_payement_id'] ?>"><?= $mode['mode_payement'] ?></option>
+                                                    <?php } ?>
                                                 </select>
                                             </div>
-                                            <button type="submit" class="btn btn-primary btn-block mb-4">Modifier</button>
+                                            <div class="form-outline mb-4">
+                                                <label class="form-label text-dark text-start" for="form5Example1" style="text-align: left !important;">référence du paiement</label>
+                                                <input class="form-control" type="text" name="Ncheque,transaction" id="">
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary btn-block mb-4">Payer</button>
                                         </form>
                                     </div>
 

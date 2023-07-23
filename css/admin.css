@@ -413,14 +413,14 @@ ul {
     font-weight: 500;
 }
 
-/* .status.inProgress {
+.status.inProgress {
     padding: 2px 4px;
     background: #8de02c;
     color: var(--white);
     border-radius: 4px;
     font-size: 14px;
     font-weight: 500;
-} */
+}
 
 .Demandes {
     position: relative;

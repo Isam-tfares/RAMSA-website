@@ -7,6 +7,11 @@ function getContratsC()
     $contrats = getContrats();
     return $contrats;
 }
+function getContratsCAll()
+{
+    $contrats = getContratsCAllDB();
+    return $contrats;
+}
 function isHisContrat($id)
 {
     $contrats = getContratsC();
