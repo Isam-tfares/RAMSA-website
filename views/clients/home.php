@@ -415,7 +415,7 @@ if (isset($_POST['id'])) {
                         <?php foreach ($allContrats as $contrat) { ?>
                             <div class="col-3 col-lg-3  bg-white  bdr ps-3">Contrat n<?= $contrat['numero'] ?></div>
                             <div class="col-3 col-lg-3 bg-white text-center bdr"><?= $contrat['date_de_debut'] ?></div>
-                            <div class="col-3 col-lg-3 bg-white text-center bdr"><?= $contrat['date_de_fin'] ?></div>
+                            <div class="col-3 col-lg-3 bg-white text-center bdr"><?= $contrat['date_de_fin'] ? $contrat['date_de_fin'] : "non définie" ?></div>
                             <div class="col-3 col-lg-3 text-center bdr bg-white">
                                 <?= $contrat['adresse_local'] . ' ' . $contrat['localite_name'] ?>
                             </div>

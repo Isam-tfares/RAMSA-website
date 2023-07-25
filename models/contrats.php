@@ -70,9 +70,19 @@ function getActivesContarts()
     $contrats = $stm->fetchAll();
     return $contrats;
 }
-function getActivesContartsOfClient()
+function getActivesContartsHaveConsommations()
 {
-    $db = connectToDatabase($id);
+    $currentMonth = date('n');
+    $db = connectToDatabase();
+    $stm = $db->prepare("SELECT * from contrats where etat=1 and Month(date_de_debut)>:month");
+    $stm->bindParam(":month", $currentMonth);
+    $stm->execute();
+    $contrats = $stm->fetchAll();
+    return $contrats;
+}
+function getActivesContartsOfClient($id)
+{
+    $db = connectToDatabase();
     $stm = $db->prepare("SELECT * from contrats where etat=1 and client_id=:id");
     $stm->bindParam(":id", $id);
     $stm->execute();
@@ -103,7 +113,12 @@ function insertContart($data, $n)
     $stm->bindParam(":adresse", $data['adresse']);
     $stm->bindParam(":localite", $data['localite']);
     $stm->execute();
-    return $stm->rowCount() > 0;
+    if ($stm->rowCount() > 0) {
+        $contratId = $db->lastInsertId();
+        return $contratId;
+    } else {
+        return false;
+    }
 }
 function updateContrat($data)
 {

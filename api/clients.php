@@ -1,5 +1,6 @@
 <?php
-
+require_once('../models/clients.php');
+require_once('../models/activities.php');
 require_once('../models/ConnectDB.php');
 require_once('./functions.php');
 
@@ -21,7 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
             $stmt->bindParam(":id", $data['client_id']);
 
             if ($stmt->execute()) {
-                // Request created successfully
+                $client = getClient($data['client_id']);
+                $content = $client['nom'] . " " . $client['prenom'] . " a changé sont mot de passe";
+                insertActivityClient($content, $data['client_id']);
                 echo "Mot de passe est mis a jour avec succés";
             } else {
                 // Failed to create the request
@@ -39,7 +42,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
             $stmt->bindParam(":adresse", $data['adresse']);
 
             if ($stmt->execute()) {
-                // Request created successfully
+                $client = getClient($data['client_id']);
+                $content = $client['nom'] . " " . $client['prenom'] . " a changé ses informations";
+                insertActivityClient($content, $data['client_id']);
                 echo "Vos données sont mis a jour avec succés";
             } else {
                 // Failed to create the request

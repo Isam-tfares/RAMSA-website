@@ -5,7 +5,7 @@ function getDemandes()
     $db = connectToDatabase();
     if (isset($_SESSION['admin'])) {
         $stm = $db->prepare("SELECT d.*, c.*, dt.demande_name , con.adresse_local
-    FROM demandes2 d
+    FROM demandes d
     JOIN clients c ON d.client_id = c.client_id
     JOIN contrats con ON d.contrat_id = con.contrat_id
     JOIN demandes_types dt ON d.demande_type_id = dt.demande_type_id ORDER BY d.etat;
@@ -18,7 +18,7 @@ function getDemandes()
         return [$demandes, $demandes2];
     } else {
         $stm = $db->prepare("SELECT d.*, dt.demande_name
-        FROM demandes2 d
+        FROM demandes d
         JOIN demandes_types dt ON d.demande_type_id = dt.demande_type_id WHERE d.client_id=:id
         ");
         $stm->bindParam(":id", $_SESSION['client']['client_id']);
@@ -43,7 +43,7 @@ function getDemande($demande_id, $abonnement = null)
         $stmt->execute();
         return  $stmt->fetch();
     } else {
-        $stmt = $db->prepare("SELECT * FROM demandes2 WHERE demande_id=:id");
+        $stmt = $db->prepare("SELECT * FROM demandes WHERE demande_id=:id");
         $stmt->bindParam(":id", $demande_id);
         $stmt->execute();
         return  $stmt->fetch();
@@ -61,7 +61,7 @@ function demandes($type)
 {
     $db = connectToDatabase();
     $stm = $db->prepare("SELECT d.*, c.*, dt.demande_name,con.adresse_local
-    FROM demandes2 d
+    FROM demandes d
     JOIN clients c ON d.client_id = c.client_id
     JOIN contrats con ON d.contrat_id = con.contrat_id
     JOIN demandes_types dt ON d.demande_type_id = dt.demande_type_id
@@ -87,7 +87,7 @@ function getLastDemandes()
     $stm = $db->prepare("SELECT d.*, c.*, dt.*
     FROM demandes d
     JOIN clients c ON d.client_id = c.client_id
-    JOIN demandes_types dt ON d.demande_type_id = dt.demande_type_id  ORDER BY d.date DESC LIMIT 5");
+    JOIN demandes_types dt ON d.demande_type_id = dt.demande_type_id  ORDER BY d.demande_date DESC LIMIT 5");
     $stm->execute();
     $demandes = $stm->fetchAll();
     return $demandes;
@@ -95,7 +95,7 @@ function getLastDemandes()
 function addDemandeToDb($type, $client, $contrat_id)
 {
     $db = connectToDatabase();
-    $stm = $db->prepare("INSERT INTO demandes2 (client_id,demande_type_id,contrat_id) VALUES (:c,:d,:con) ");
+    $stm = $db->prepare("INSERT INTO demandes (client_id,demande_type_id,contrat_id) VALUES (:c,:d,:con) ");
     $stm->bindParam(":c", $client);
     $stm->bindParam(":d", $type);
     $stm->bindParam(":con", $contrat_id);
@@ -137,7 +137,7 @@ function DemandeisAlreadyExisted($type, $client_id, $contrat_id = null)
     if ($type == 1) {
         $stm = $db->prepare("SELECT * FROM demandes_abonnement WHERE client_id=:id and etat=0");
     } else {
-        $stm = $db->prepare("SELECT * FROM demandes2 WHERE client_id=:id and etat=0 and demande_type_id=:type and contrat_id=:c");
+        $stm = $db->prepare("SELECT * FROM demandes WHERE client_id=:id and etat=0 and demande_type_id=:type and contrat_id=:c");
         $stm->bindParam(":type", $type);
         $stm->bindParam(":c", $contrat_id);
     }
@@ -166,7 +166,7 @@ function updateDemandeAbonnement($demande_id)
 function updateOtherDemandes($demande_id)
 {
     $db = connectToDatabase();
-    $stm = $db->prepare("UPDATE demandes2 SET `etat`=1,`date_traitement`=now(),time_traitement=now()  WHERE demande_id=:id"); // add file path
+    $stm = $db->prepare("UPDATE demandes SET `etat`=1,`date_traitement`=now(),time_traitement=now()  WHERE demande_id=:id"); // add file path
     $stm->bindParam(":id", $demande_id);
     $stm->execute();
     return $stm->rowCount() > 0;
@@ -175,7 +175,7 @@ function updateOtherDemandes($demande_id)
 function updateDemandeContratAndHistory($demande_id, $file)
 {
     $db = connectToDatabase();
-    $stm = $db->prepare("UPDATE demandes2 SET `etat`=1,`date_traitement`=now(),time_traitement=now(),file_path=:file  WHERE demande_id=:id"); // add file path
+    $stm = $db->prepare("UPDATE demandes SET `etat`=1,`date_traitement`=now(),time_traitement=now(),file_path=:file  WHERE demande_id=:id"); // add file path
     $stm->bindParam(":id", $demande_id);
     $stm->bindParam(":file", $file);
     $stm->execute();

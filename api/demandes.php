@@ -1,4 +1,6 @@
 <?php
+require_once('../models/clients.php');
+require_once('../models/activities.php');
 require_once('../models/ConnectDB.php');
 require_once('./functions.php');
 
@@ -11,7 +13,7 @@ if (checkToken($data["client_id"], $token)) {
         if (isset($data['client_id'])) {
             $client_id = $data['client_id'];
             $sql = "SELECT d.*, dt.demande_name
-            FROM demandes2 d
+            FROM demandes d
             JOIN demandes_types dt ON d.demande_type_id = dt.demande_type_id WHERE d.client_id=:id";
             $stmt = connectToDatabase()->prepare($sql);
             $stmt->bindParam(":id", $client_id);
@@ -47,6 +49,9 @@ if (checkToken($data["client_id"], $token)) {
                         $stm->bindParam(":a", $data['adresse']);
                         $stm->bindParam(":l", $data['localite']);
                         if ($stm->execute()) {
+                            $client = getClient($data['client_id']);
+                            $content = $client['nom'] . " " . $client['prenom'] . " a demandé une demande d'abonnement";
+                            insertActivityClient($content, $data['client_id']);
                             echo "Demande créée avec succès";
                         } else {
                             echo "Échec de la création de la demande";
@@ -63,19 +68,25 @@ if (checkToken($data["client_id"], $token)) {
                 }
             } else {
                 $db = connectToDatabase();
-                $stm = $db->prepare("SELECT * FROM demandes2 WHERE client_id=:c and demande_type_id=:t and etat=0");
+                $stm = $db->prepare("SELECT * FROM demandes WHERE client_id=:c and demande_type_id=:t and etat=0");
                 $stm->bindParam(":c", $data['client_id']);
                 $stm->bindParam(":t", $data['demande_type_id']);
                 $stm->execute();
                 $res = $stm->rowCount() == 0;
                 if ($res) {
                     if (isset($data['contrat_id']) && !empty($data['contrat_id'])) {
-                        $stm = $db->prepare("INSERT INTO demandes2 (client_id,demande_type_id,contrat_id) VALUES (:c,:d,:con) ");
+                        $stm = $db->prepare("INSERT INTO demandes (client_id,demande_type_id,contrat_id) VALUES (:c,:d,:con) ");
                         $stm->bindParam(":c", $data['client_id']);
                         $stm->bindParam(":d", $data['demande_type_id']);
                         $stm->bindParam(":con", $data['contrat_id']);
                         if ($stm->execute()) {
                             // Request created successfully
+                            $stm = connectToDatabase()->prepare("SELECT * FROM demandes_types WHERE demande_type_id=:id");
+                            $stm->bindParam(":id", $data['demande_type_id']);
+                            $stm->execute();
+                            $client = getClient($data['client_id']);
+                            $content = $client['nom'] . " " . $client['prenom'] . " a demandé une " . $stm->fetch()['demande_name'] . " pour Contrat id: " . $data['contrat_id'];
+                            insertActivityClient($content, $data['client_id']);
                             echo "Demande créée avec succès";
                         } else {
                             // Failed to create the request
@@ -96,7 +107,7 @@ if (checkToken($data["client_id"], $token)) {
             echo "Données non valides";
         }
     } else {
-        // Méthode de requête invalide
+
         echo "Méthode de requête invalide.";
     }
 } else {

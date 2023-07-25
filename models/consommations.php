@@ -131,3 +131,20 @@ consommations.contrat_id = :contrat_id
     $stm->execute();
     return $stm->fetchAll();
 }
+function getConsommation($consommation_id)
+{
+    $db = connectToDatabase();
+    $stm = $db->prepare("SELECT * FROM consommations WHERE consommation_id=:id");
+    $stm->bindParam(":id", $consommation_id);
+    $stm->execute();
+    return $stm->fetch();
+}
+function getAllConsommationsOfLM($month, $year)
+{
+    $db = connectToDatabase();
+    $stmt = $db->prepare("SELECT * FROM consommations WHERE consommation_mois=:month and consommation_annee=:year");
+    $stmt->bindParam(":month", $month);
+    $stmt->bindParam(":year", $year);
+    $stmt->execute();
+    return $stmt->fetchAll();
+}

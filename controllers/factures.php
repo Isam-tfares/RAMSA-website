@@ -18,6 +18,13 @@ function editFacture()
     }
     if (isset($_POST['facture_id']) && isset($_POST['etat'])) {
         $res = updateFacture($_POST['facture_id'], $_POST['etat']);
+        if ($_POST['etat']) {
+            $content = $_SESSION['admin']['email'] . " a payé  la facture " . $_POST['facture_id'];
+            insertActivityAdmin($content, $_SESSION['admin']['id']);
+        } else {
+            $content = $_SESSION['admin']['email'] . " a impayé  la facture " . $_POST['facture_id'];
+            insertActivityAdmin($content, $_SESSION['admin']['id']);
+        }
         RedirectwithPost("index.php?page=factures", $res);
     } else {
         Redirect("index.php?page=factures");
@@ -34,6 +41,9 @@ function payFacture()
         if ($facture['etat'] == 0) {
             $res = updateFacture($_POST['facture_id'], 1);
             $result = insertEncaissement($_POST['facture_id'], $_POST['mode_payement'], $_POST['Ncheque,transaction'], $facture['contrat_id']);
+            $content = $_SESSION['admin']['email'] . " a payé  la facture " . $_POST['facture_id'];
+            insertActivityAdmin($content, $_SESSION['admin']['id']);
+
             RedirectwithPost("index.php?page=factures", $res && $result);
         } else {
             Redirect("index.php?page=factures");
@@ -53,6 +63,8 @@ function impayFacture()
         if ($facture['etat'] == 1) {
             $res = updateFacture($_POST['facture_id'], 0);
             $result = deleteEncaissementByFactureDB($_POST['facture_id']);
+            $content = $_SESSION['admin']['email'] . " a impayé  la facture " . $_POST['facture_id'];
+            insertActivityAdmin($content, $_SESSION['admin']['id']);
             RedirectwithPost("index.php?page=factures", $res && $result);
         } else {
             Redirect("index.php?page=factures");

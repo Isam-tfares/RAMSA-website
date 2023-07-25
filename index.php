@@ -14,6 +14,7 @@ require("controllers/encaissements.php");
 require("models/demandes_types.php");
 require("models/localites.php");
 require("models/Modes_payement.php");
+require("models/activities.php");
 require_once("functions/DownloadContrat.php");
 
 // LogOut
@@ -26,7 +27,7 @@ if (isset($_POST['logout'])) {
 // pages of admin
 
 if (isset($_SESSION['admin'])) {
-    $pages = ['home', 'clients', 'reclamations', 'demandes', 'contrats', 'demandesTypes', 'consommations', 'factures', 'encaissements'];
+    $pages = ['activities', 'home', 'clients', 'reclamations', 'demandes', 'contrats', 'demandesTypes', 'consommations', 'factures', 'encaissements'];
     $page = "home";
     if (isset($_GET['page'])) {
         $page = $_GET['page'];

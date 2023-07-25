@@ -1,11 +1,23 @@
 <?php
-require_once("models/ConnectDB.php");
+if (isset($_SESSION['client']) || isset($_SESSION['admin'])) {
+    require_once("models/ConnectDB.php");
+}
+
 function getClients()
 {
     $db = connectToDatabase();
     $stm = $db->prepare("SELECT * FROM clients");
     $stm->execute();
     $clients = $stm->fetchAll();
+    return $clients;
+}
+function getClient($client_id)
+{
+    $db = connectToDatabase();
+    $stm = $db->prepare("SELECT * FROM clients WHERE client_id=:id");
+    $stm->bindParam(":id", $client_id);
+    $stm->execute();
+    $clients = $stm->fetch();
     return $clients;
 }
 function insert($data)
@@ -38,7 +50,7 @@ function update($data)
 function delete($id)
 {
     $db = connectToDatabase();
-    $stm = $db->prepare("DELETE FROM `clients` WHERE client_id=:id");
+    $stm = $db->prepare("UPDATE `clients` WHERE SET isActive=0 WHERE client_id=:id");
     $stm->bindParam(":id", $id);
     $stm->execute();
     return $stm->rowCount() > 0;

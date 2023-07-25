@@ -1,6 +1,7 @@
 <?php
 require_once('./models/consommations.php');
 require_once('./models/factures.php');
+require_once('./models/contrats.php');
 
 function getConsommationsOfLM()
 {
@@ -79,7 +80,10 @@ function addConsommation() // Add facture
             if ($res) {
                 $montant = ($index2 - $index1) * 10; // Montant
                 $consommation_id = $res;
+                $adresse = getContrat($contrat_id)['adresse_local'];
                 $result = insertFacture($montant, $consommation_id, $contrat_id);
+                $content = $_SESSION['admin']['email'] . " a enregistrer la consommation du  client " . $_POST['nom'] . " " . $_POST['prenom'] . " pour l'adresse " . $adresse . " et pour la date " . $mounth . "/" . $year;
+                insertActivityAdmin($content, $_SESSION['admin']['id']);
             }
             RedirectwithPost("index.php?page=consommations", $res && $result);
             echo $res;
@@ -99,7 +103,11 @@ function editConsommation() // Update facture
     }
     $res = updateConsommation($_POST['consommation_id'], $_POST['index2']);
     $montant = ($_POST['index2'] - $_POST['index1']) * 10;
+
     $result = updateFactureMontant($_POST['consommation_id'], $montant);
+    $adresse = getContrat(getConsommation($_POST['consommation_id'])['contrat_id'])['adresse_local'];
+    $content = $_SESSION['admin']['email'] . " a modifié la consommation du  client " . $_POST['nom'] . " " . $_POST['prenom'] . " pour l'adresse " . $adresse . " et pour consommation_id " . $_POST['consommation_id'];
+    insertActivityAdmin($content, $_SESSION['admin']['id']);
     RedirectwithPost("index.php?page=consommations", $res);
 }
 function getConsommationsOfCM()
@@ -114,4 +122,19 @@ function getConsommationsOfCM()
         $lastMonthYear = $currentYear;
     }
     return getConsommationsOfCMDB($lastMonthNumber, $lastMonthYear);
+}
+function ConsommationsAreInserted()
+{
+    $currentMonth = date('n');
+    $currentYear = date('Y');
+    if ($currentMonth == 1) {
+        $month = 12;
+        $year = $currentYear - 1;
+    } else {
+        $month = $currentMonth - 1;
+        $year = $currentYear;
+    }
+    $consommations = getAllConsommationsOfLM($month, $year);
+    $contrats = getActivesContartsHaveConsommations();
+    return count($consommations) == count($contrats);
 }

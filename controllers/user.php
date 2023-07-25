@@ -40,6 +40,8 @@ function changePassword()
         $current_password = getPassword();
         if ($current_password == sha1($_POST['old_password'])) {
             $res = updatePassword(sha1($_POST['password']));
+            $content = $_SESSION['admin']['email'] . " a changé son mot de passe ";
+            insertActivityAdmin($content, $_SESSION['admin']['id']);
             RedirectwithPost("index.php", $res, "Mot de passe a été mis a jour avec success");
         } else {
             RedirectwithPost("index.php", 0, "Mot de passe incorrecte");
@@ -55,6 +57,8 @@ function addAdmin()
     }
     if (isset($_POST['email']) && !empty($_POST['email']) && isset($_POST['password']) && !empty($_POST['password']) && !EmailIsExisted($_POST['email'])) {
         $res = addAdminToDb($_POST['email'], sha1($_POST['password']));
+        $content = $_SESSION['admin']['email'] . " a ajouté un admin " . $_POST['email'];
+        insertActivityAdmin($content, $_SESSION['admin']['id']);
         RedirectwithPost("index.php", $res, "Nouveau admin est ajoutée avec success");
     } else {
         Redirect("index.php");

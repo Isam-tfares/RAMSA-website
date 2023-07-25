@@ -6,7 +6,9 @@ $nbrContrats = count(getActivesContarts());
 $nbrMessages = count(getMessages());
 $messages = getLastMessagesC();
 $demandes = getLastDemandes();
+[$activities1, $activities2] = getLastActivities();
 $current_date = new DateTime();
+$consommationsAreInserted = ConsommationsAreInserted();
 
 
 ob_start(); ?>
@@ -19,6 +21,11 @@ ob_start(); ?>
     }
 </style>
 <!-- ======================= Cards ================== -->
+<div class="text-center d-flex align-items-center justify-content-center cardHeader">
+    <?php if (!$consommationsAreInserted) { ?>
+        <a class="btn" href="?page=consommations">Enregistrer les consommations</a>
+    <?php }  ?>
+</div>
 <div class="cardBox">
     <div class="card">
         <div>
@@ -70,19 +77,31 @@ ob_start(); ?>
 <div class="details">
     <div class="activities">
         <div class="cardHeader">
-            <h2>Derniers Réclamations</h2>
-            <a href="?page=demandes#messages" class="btn">Voir tous</a>
+            <h2>Derniers Activités</h2>
+            <a href="?page=activities" class="btn">Voir tous</a>
         </div>
 
         <table>
 
             <tbody>
-                <?php foreach ($messages as $message) { ?>
+                <?php foreach ($activities1 as $activity) { ?>
                     <tr>
                         <td>
-                            <?= $message['message_content'] ?>
+                            <?= $activity['activity_content'] ?>
                             <br>
-                            <span class="fullname"><?= $message['nom'] . " " . $message['prenom'] ?></span>
+                            <!-- <span class="fullname"><?= $activity['email'] ?></span> -->
+                            <span class="fullname"><?= $activity['activity_date'] . " " . $activity['activity_time'] ?></span>
+                        </td>
+
+                    </tr>
+                <?php } ?>
+                <?php foreach ($activities2 as $activity) { ?>
+                    <tr>
+                        <td>
+                            <?= $activity['activity_content'] ?>
+                            <br>
+                            <!-- <span class="fullname"><?= $activity['nom'] . " " . $activity['prenom'] ?></span> -->
+                            <span class="fullname"><?= $activity['activity_date'] . " " . $activity['activity_time'] ?></span>
                         </td>
 
                     </tr>
@@ -92,7 +111,6 @@ ob_start(); ?>
         </table>
     </div>
 
-    <!-- ================= New Customers ================ -->
     <div class="Demandes">
         <div class="cardHeader">
             <h2>Derniers Demandes</h2>

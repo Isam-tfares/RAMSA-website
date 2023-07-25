@@ -50,6 +50,9 @@ function addDemande()
         }
     }
     if ($res) {
+        $Dtype = get($type);
+        $content = $_SESSION['client']['nom'] . " " . $_SESSION['client']['prenom'] . " a demandé " . $Dtype['demande_name'];
+        insertActivityClient($content, $_SESSION['client']['client_id']);
         RedirectwithPost("index.php#Demandes", 1, "demande", "Votre demande est envoyée avec succes");
     } else {
         RedirectwithPost("index.php#Demandes", 0, "demande", "Il y a un erreur Merci de Réssayer");
@@ -85,7 +88,11 @@ function traiterDemande()
                     $res = insertContart($data, getNLastContrat($demande['client_id']) + 1);
                     if ($res) {
                         $result = updateDemandeAbonnement($demande['demande_id']);
-                        RedirectwithPost("?page=demandes", $result, "La demande d'abonnement est traitée avec succées et un contrat a été crée");
+                        $client = getClient($data['client_id']);
+                        $Dtype = get($demande['demande_type_id']);
+                        $content = $_SESSION['admin']['email'] . " a traité la demande " . $Dtype['demande_name'] . " du client " . $client['nom'] . " " . $client['prenom'];
+                        insertActivityAdmin($content, $_SESSION['admin']['id']);
+                        RedirectwithPost("?page=demandes", $result, "La demande d'abonnement est traitée avec succées et une contrat a été crée");
                     }
                 }
                 break;
@@ -93,57 +100,47 @@ function traiterDemande()
                 $res = Resiliation($demande['contrat_id']);
                 if ($res) {
                     $result = updateOtherDemandes($demande['demande_id']);
-
+                    $client = getClient($demande['client_id']);
+                    $Dtype = get($demande['demande_type_id']);
+                    $content = $_SESSION['admin']['email'] . " a traité la demande " . $Dtype['demande_name'] . " du client " . $client['nom'] . " " . $client['prenom'];
+                    insertActivityAdmin($content, $_SESSION['admin']['id']);
                     RedirectwithPost("?page=demandes", $result, "La demande de resiliation est traitée avec succées ");
                 }
                 break;
             case 3:
-                // echo "Historique de L'encaissement";
-                // create file for Historique de L'encaissement  and make etat=1 
-                // get Historique of $demande['contrat_id']
-                // echo "<pre>";
-                // print_r(getHistoryEncaissemnts($demande['contrat_id']));
-                // echo "</pre>";
-
                 $fileName = downloadHistoriqueEncaissements(getHistoryEncaissemnts($demande['contrat_id']));
                 $res = updateDemandeContratAndHistory($demande['demande_id'], $fileName);
+                $client = getClient($demande['client_id']);
+                $Dtype = get($demande['demande_type_id']);
+                $content = $_SESSION['admin']['email'] . " a traité la demande " . $Dtype['demande_name'] . " du client " . $client['nom'] . " " . $client['prenom'];
+                insertActivityAdmin($content, $_SESSION['admin']['id']);
                 RedirectwithPost("?page=demandes", $res, "La demande d'hsitorique des encaissements est traitée avec succées ");
-
-
                 break;
             case 4:
-                // echo "Historique de Consommation";
-                // file Historique de Consommation  and make etat=1 for $demande['demande_id']
-                // get Historique of $demande['contrat_id']
-
                 $consommations = getHistoriqueConsommationsOfClient($demande['contrat_id']);
                 $fileName = downloadHistoriqueConsommation($consommations);
                 $res = updateDemandeContratAndHistory($demande['demande_id'], $fileName);
+                $client = getClient($demande['client_id']);
+                $Dtype = get($demande['demande_type_id']);
+                $content = $_SESSION['admin']['email'] . " a traité la demande " . $Dtype['demande_name'] . " du client " . $client['nom'] . " " . $client['prenom'];
+                insertActivityAdmin($content, $_SESSION['admin']['id']);
                 RedirectwithPost("?page=demandes", $res, "La demande d'hsitorique des consommations est traitée avec succées ");
                 break;
             case 5:
-                // demande de contrat
                 $contrat = getContrat($demande['contrat_id']);
-
                 $fileName = download2($contrat);
                 $res = updateDemandeContratAndHistory($demande['demande_id'], $fileName);
+                $client = getClient($demande['client_id']);
+                $Dtype = get($demande['demande_type_id']);
+                $content = $_SESSION['admin']['email'] . " a traité la demande " . $Dtype['demande_name'] . " du client " . $client['nom'] . " " . $client['prenom'];
+                insertActivityAdmin($content, $_SESSION['admin']['id']);
                 RedirectwithPost("?page=demandes", $res, "La demande de contrat est traitée avec succées ");
-
                 break;
             default:
                 Redirect("?page=demandes");
                 break;
         }
     }
-    // Redirect("?page=demandes");
-
-    // if (isset($_POST['demande_id']) && !empty($_POST['demande_id']) && isset($_FILES['file'])) {
-    //     $files = $_FILES;
-    //     $res = updateDemande($_POST['demande_id'], $files);
-    //     RedirectwithPost("?page=demandes", $res, "La demande a été traitée avec succés");
-    // } else {
-    //     Redirect("?page=demandes");
-    // }
 }
 
 

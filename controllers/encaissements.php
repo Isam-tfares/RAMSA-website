@@ -8,14 +8,7 @@ function getAllEncaissements($month, $year)
     }
     return getAll($month, $year);
 }
-function addEncaissemnt()
-{
-    if (!isset($_SESSION['admin'])) {
-        header("location:index.php");
-        exit;
-    }
-    print_r($_POST);
-}
+
 function editEncaissement()
 {
     if (!isset($_SESSION['admin'])) {
@@ -24,6 +17,8 @@ function editEncaissement()
     }
     if (isset($_POST['encaissement_id']) && isset($_POST['mode_payement']) && isset($_POST['Ncheque,transaction'])) {
         $res = updateEncaissement($_POST['encaissement_id'], $_POST['mode_payement'], $_POST['Ncheque,transaction']);
+        $content = $_SESSION['admin']['email'] . " a modifier le mode de payement d'encaissement " . $_POST['encaissement_id'];
+        insertActivityAdmin($content, $_SESSION['admin']['id']);
         RedirectwithPost("index.php?page=encaissements", $res);
     } else {
         Redirect("index.php?page=encaissements");
