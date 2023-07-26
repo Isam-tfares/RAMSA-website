@@ -70,12 +70,12 @@ function getActivesContarts()
     $contrats = $stm->fetchAll();
     return $contrats;
 }
-function getActivesContartsHaveConsommations()
+function getActivesContartsHaveConsommations($month, $year)
 {
-    $currentMonth = date('n');
     $db = connectToDatabase();
-    $stm = $db->prepare("SELECT * from contrats where etat=1 and Month(date_de_debut)>:month");
-    $stm->bindParam(":month", $currentMonth);
+    $stm = $db->prepare("SELECT contrats.*,clients.nom,clients.prenom from contrats,clients where contrats.client_id=clients.client_id and contrats.etat=1 and ( Month(contrats.date_de_debut)<= :month or YEAR(contrats.date_de_debut)<:year) ORDER BY contrats.contrat_id");
+    $stm->bindParam(":month", $month);
+    $stm->bindParam(":year", $year);
     $stm->execute();
     $contrats = $stm->fetchAll();
     return $contrats;

@@ -36,8 +36,12 @@ function insert($data)
 function update($data)
 {
     $db = connectToDatabase();
-    $stm = $db->prepare("UPDATE `clients` SET`password`=:pass,`nom`=:nom,`prenom`=:prenom,`adresse`=:adresse,`tel`=:tel,`email`=:email WHERE client_id=:id");
-    $stm->bindParam(":pass", sha1($data['password']));
+    if ($data['password']) {
+        $stm = $db->prepare("UPDATE `clients` SET`password`=:pass,`nom`=:nom,`prenom`=:prenom,`adresse`=:adresse,`tel`=:tel,`email`=:email WHERE client_id=:id");
+        $stm->bindParam(":pass", sha1($data['password']));
+    } else {
+        $stm = $db->prepare("UPDATE `clients` SET `nom`=:nom,`prenom`=:prenom,`adresse`=:adresse,`tel`=:tel,`email`=:email WHERE client_id=:id");
+    }
     $stm->bindParam(":nom", $data['nom']);
     $stm->bindParam(":prenom", $data['prenom']);
     $stm->bindParam(":adresse", $data['adresse']);

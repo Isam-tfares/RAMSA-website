@@ -29,7 +29,7 @@ function getAllFacturesDB($year, $month)
     JOIN contrats c ON f.contrat_id = c.contrat_id
     JOIN clients cl ON c.client_id = cl.client_id
     JOIN consommations cons ON cons.consommation_id = f.consommation_id
-    WHERE cons.consommation_mois = :month AND cons.consommation_annee = :year");
+    WHERE cons.consommation_mois = :month AND cons.consommation_annee = :year ORDER BY f.etat,f.facture_payement_date DESC");
     $stm->bindParam(":month", $month);
     $stm->bindParam(":year", $year);
     $stm->execute();

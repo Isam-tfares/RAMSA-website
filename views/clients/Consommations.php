@@ -189,14 +189,14 @@ foreach ($consommations as $i => $c) {
         var maxDataValue = Math.max(...consommations) + 20;
         var ctx = document.getElementById('consommationChart').getContext('2d');
         var chart = new Chart(ctx, {
-            type: 'line',
+            type: 'bar', // Change the chart type to 'bar' for histogram
             data: {
                 labels: monthLabels,
                 datasets: [{
-                    label: 'Historique des consommation',
+                    label: 'Historique des consommations',
                     data: consommations,
-                    borderColor: 'rgba(75, 192, 192, 1)',
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 2,
                     fill: true
                 }]

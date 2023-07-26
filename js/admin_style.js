@@ -20,6 +20,6 @@ toggle.onclick = function () {
   main.classList.toggle("active");
 };
 
-if(document.querySelector('#students')!=null){
+if (document.querySelector('#students') != null) {
   window.location.hash = '#students';
 }

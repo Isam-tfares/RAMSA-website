@@ -84,6 +84,16 @@ function ConsommationOfMounthAndYearOfContrat($mounth, $year, $contrat_id)
     $stm->execute();
     return $stm->rowCount() > 0;
 }
+function getConsommationOfMounthAndYearOfContrat($mounth, $year, $contrat_id)
+{
+    $db = connectToDatabase();
+    $stm = $db->prepare("SELECT * FROM `consommations` WHERE `contrat_id`=:c AND  `consommation_mois`=:m AND  `consommation_annee`=:y");
+    $stm->bindParam(":c", $contrat_id);
+    $stm->bindParam(":m", $mounth);
+    $stm->bindParam(":y", $year);
+    $stm->execute();
+    return $stm->fetch();
+}
 function getConsommationsOfCMDB($monthNumber, $year)
 {
     $db = connectToDatabase();

@@ -3,7 +3,8 @@ require_once('TCPDF/tcpdf.php');
 $contrats = getContratsC();
 $localites = getLocalities();
 $clients = clients();
-$consommations = getConsommationsOfLM();
+// $consommations = getConsommationsOfLM();
+$consommations = getConsommationsOfLMTest();
 $consommationsOfCM = getConsommationsOfCM();
 $years = getYears();
 $mounths = getMounths();
@@ -14,23 +15,11 @@ if (isset($_POST['year']) && !empty($_POST['year'])) {
     $mounthSelected = $_POST['mounth'];
 }
 $historique_consommations = getHistoriqueConsommations($yearSelected, $mounthSelected);
-
-
 $firstDayLastMonth = strtotime('first day of last month');
 $lastDayLastMonth = strtotime('last day of last month');
 $firstDayFormatted = date('j/n', $firstDayLastMonth);
 $lastDayFormatted = date('j/n', $lastDayLastMonth);
 
-//Month and year of last month
-$currentMonth = date('n');
-$currentYear = date('Y');
-if ($currentMonth == 1) {
-    $lastMonthNumber = 12;
-    $lastMonthYear = $currentYear - 1;
-} else {
-    $lastMonthNumber = $currentMonth - 1;
-    $lastMonthYear = $currentYear;
-}
 $title = "Consommations" ?>
 <?php ob_start(); ?>
 

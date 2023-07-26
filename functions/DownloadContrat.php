@@ -90,7 +90,7 @@ function download2($contrat)
     </div>
     <div class="main">
         <div class="date">
-            Agadir, le 07/07/2023
+            Agadir, le ' . date('d/m/Y') . '
         </div>
         <div class="data">
             <div class="dataD">
@@ -111,23 +111,6 @@ function download2($contrat)
             <div class="dataD">
                 Localité :   ' . $contrat['localite_name'] . '
             </div>
-        </div>
-
-    </div>
-    <div class="footer">
-        <div class="footerC">
-            <p class="Fp">REGIE AUTONOME MULTI-SERVICES D\'AGADIR</p>
-            <p  class="para">Rue 18 Novembre Quartier Industriel AGADIR </p>
-            <p  class="para">Tel : 0528233030 (L.G) : 0528272727 Fax : 0528272727 </p>
-            <div class="rs">
-                <div>
-                    <span class="facebook"> <img src="./assets//imgs/facebook.png"  alt=""> </span> https://www.facebook.com/ramsamultiservices/   Email:regie.ramsa@gmail.com 
-                </div>
-                <div>
-                <img src="./assets//imgs/twitter.png"  alt=""> https://twitter.com/ramsa-agadir  Site web : http://www.ramsa.ma
-                </div>
-            </div>
-
         </div>
 
     </div>

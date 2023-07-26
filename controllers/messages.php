@@ -32,12 +32,15 @@ function traiterMessage()    // add file path
         exit;
     }
 
-    if (isset($_POST['message_id']) && !empty($_POST['message_id'])) {
-        $res = updateMessage($_POST['message_id']);
-        $content = $_SESSION['admin']['email']  . " a lis la réclamation " . $_POST['message_id'];
-        insertActivityAdmin($content, $_SESSION['admin']['id']);
+    if (isset($_POST['message_id']) && !empty($_POST['message_id']) && isset($_POST['reponse']) && !empty($_POST['reponse'])) {
+        $res = updateMessage($_POST['message_id'], $_POST['reponse']);
+        if ($res) {
+            $content = $_SESSION['admin']['email']  . " a répondue à la réclamation " . $_POST['message_id'];
+            insertActivityAdmin($content, $_SESSION['admin']['id']);
+        }
     }
-    Redirect("?page=demandes#messages");
+
+    Redirect("?page=reclamations");
 }
 function deleteMessage()
 {
@@ -49,7 +52,7 @@ function deleteMessage()
     if (isset($_POST['message_id']) && !empty($_POST['message_id'])) {
         $res = deleteMessageDB($_POST['message_id']);
     }
-    Redirect("?page=demandes#messages");
+    Redirect("?page=reclamations");
 }
 function getMessagesNonLues()
 {

@@ -170,8 +170,8 @@ if (isset($_POST['id'])) {
                                                                     <input type="hidden" name="type" value="<?= $demande['demande_type_id'] ?>">
 
                                                                     <div class="form-outline mb-4">
-                                                                        <label class="form-label text-dark text-start" for="form5Example1" style="color: black;text-align:left;font-size:2rem">Adresse corespondant</label>
-                                                                        <select name="contrat_id" id="selectMounth" class="form-select w-75" aria-label="Default select example" style="height: 40px !important;color: black;text-align:left;font-size:2rem">
+                                                                        <label class="form-label text-dark text-start" for="form5Example1" style="color: black;text-align:left;font-size:2rem;margin-bottom:20px">Adresse corespondant</label>
+                                                                        <select name="contrat_id" id="selectMounth" class="form-select w-100" aria-label="Default select example" style="height: 40px !important;color: black;text-align:left;font-size:2rem">
                                                                             <?php foreach ($contrats as $contrat) { ?>
                                                                                 <option value="<?= $contrat['contrat_id'] ?>" style="font-size:2rem"><?= $contrat['adresse_local'] ?></option>
                                                                             <?php } ?>
@@ -179,7 +179,7 @@ if (isset($_POST['id'])) {
                                                                     </div>
 
                                                                     <div>
-                                                                        <button type="submit" class="btn btn-primary w-25 mt-5 text-white border-none" onclick="return confirm('Êtes-vous sûr de vouloir demande ce service ?');" style="font-size:2rem">Demander</button>
+                                                                        <button type="submit" class="btn btn-primary w-25 my-5 text-white border-none" onclick="return confirm('Êtes-vous sûr de vouloir demande ce service ?');" style="font-size:2rem">Demander</button>
                                                                     </div>
                                                                 </form>
 
@@ -374,19 +374,21 @@ if (isset($_POST['id'])) {
                 <h2 class=" title2" style="margin-top: 50px;">Vos réclamations</h2>
                 <div>
                     <div class="row m-0 container-fluid rounded">
-                        <div class="col-4 col-lg-4 bdr ps-3 fw-bold bg-light title1">Réclamations</div>
-                        <div class="col-4 col-lg-4 text-center bdr fw-bold bg-light title1">Date de réclamations</div>
-                        <div class="col-4 col-lg-4 text-center bdr fw-bold bg-light title1">Etat</div>
+                        <div class="col-3 col-lg-3 bdr ps-3 fw-bold bg-light title1">Réclamations</div>
+                        <div class="col-3 col-lg-3 text-center bdr fw-bold bg-light title1">Date de réclamations</div>
+                        <div class="col-3 col-lg-3 text-center bdr fw-bold bg-light title1">Etat</div>
+                        <div class="col-3 col-lg-3 text-center bdr fw-bold bg-light title1">Réponse</div>
                     </div>
                     <div class="row m-0 container-fluid">
                         <?php foreach ($reclamations as $message) { ?>
-                            <div class="col-4 col-lg-4  bg-white  bdr ps-3" style="height:100px;overflow-y:auto"><?= $message['message_content'] ?></div>
-                            <div class="col-4 col-lg-4 bg-white text-center bdr"><?= $message['message_date'] ?></div>
+                            <div class="col-3 col-lg-3  bg-white  bdr ps-3" style="height:100px;overflow-y:auto"><?= $message['message_content'] ?></div>
+                            <div class="col-3 col-lg-3 bg-white text-center bdr"><?= $message['message_date'] ?></div>
                             <?php if ($message['message_statut'] == '1') { ?>
-                                <div class="col-4 col-lg-4 text-center bdr text-succes fw-bold bg-white">Traité</div>
+                                <div class="col-3 col-lg-3 text-center bdr text-succes fw-bold bg-white">Traité</div>
                             <?php } else { ?>
-                                <div class="col-4 col-lg-4 text-center bdr text-warning fw-bold bg-white">NonTraité</div>
+                                <div class="col-3 col-lg-3 text-center bdr text-warning fw-bold bg-white">NonTraité</div>
                             <?php } ?>
+                            <div class="col-3 col-lg-3  bg-white  bdr ps-3" style="height:100px;overflow-y:auto"><?= $message['reponse'] ?></div>
                         <?php } ?>
 
 
@@ -409,7 +411,7 @@ if (isset($_POST['id'])) {
                         <div class="col-3 col-lg-3  bdr ps-3 fw-bold bg-light title1">Listes des contrats</div>
                         <div class="col-3 col-lg-3 text-center bdr fw-bold bg-light title1">Date de Début</div>
                         <div class="col-3 col-lg-3 text-center bdr fw-bold bg-light title1">Date de fin</div>
-                        <div class="col-3 col-lg-3 text-center bdr fw-bold bg-light title1">Action</div>
+                        <div class="col-3 col-lg-3 text-center bdr fw-bold bg-light title1">Adresse</div>
                     </div>
                     <div class="row m-0 container-fluid">
                         <?php foreach ($allContrats as $contrat) { ?>

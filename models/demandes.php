@@ -19,14 +19,14 @@ function getDemandes()
     } else {
         $stm = $db->prepare("SELECT d.*, dt.demande_name
         FROM demandes d
-        JOIN demandes_types dt ON d.demande_type_id = dt.demande_type_id WHERE d.client_id=:id
+        JOIN demandes_types dt ON d.demande_type_id = dt.demande_type_id WHERE d.client_id=:id ORDER BY  d.demande_date DESC,d.demande_time DESC
         ");
         $stm->bindParam(":id", $_SESSION['client']['client_id']);
         $stm->execute();
         $demandes = $stm->fetchAll();
         $stmt = $db->prepare("SELECT d.*
         FROM demandes_abonnement d
-        WHERE d.client_id=:id 
+        WHERE d.client_id=:id  ORDER BY  d.demande_date DESC,d.demande_time DESC
         ");
         $stmt->bindParam(":id", $_SESSION['client']['client_id']);
         $stmt->execute();

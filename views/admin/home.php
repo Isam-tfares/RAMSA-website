@@ -63,7 +63,7 @@ ob_start(); ?>
     <div class="card">
         <div>
             <div class="numbers"><?= $nbrMessages ?></div>
-            <div class="cardName">Réclamations non lues</div>
+            <div class="cardName">Réclamations non répondues</div>
         </div>
 
         <div class="iconBx">

@@ -4,7 +4,7 @@ function getMessages()
 {
     $db = connectToDatabase();
     if (isset($_SESSION['admin'])) {
-        $stm = $db->prepare("SELECT messages.*,clients.* FROM messages INNER JOIN clients WHERE clients.client_id=messages.client_id ");
+        $stm = $db->prepare("SELECT messages.*,clients.* FROM messages INNER JOIN clients WHERE clients.client_id=messages.client_id and messages.message_statut=0 ");
     } else {
         $stm = $db->prepare("SELECT messages.* FROM messages WHERE messages.client_id=:id ");
         $stm->bindParam(":id", $_SESSION['client']['client_id']);
@@ -30,11 +30,12 @@ function insertMessage($message)
     $stm->execute();
     return $stm->rowCount() > 0;
 }
-function updateMessage($id)
+function updateMessage($id, $reponse)
 {
     $db = connectToDatabase();
-    $stm = $db->prepare("UPDATE `messages` SET `message_statut`='1' WHERE message_id=:id"); // add file path
+    $stm = $db->prepare("UPDATE `messages` SET `message_statut`=1 ,`reponse`=:reponse WHERE `message_id`=:id"); // add file path
     $stm->bindParam(":id", $id);
+    $stm->bindParam(":reponse", $reponse);
     $stm->execute();
     return $stm->rowCount() > 0;
 }

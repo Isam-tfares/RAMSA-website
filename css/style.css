@@ -56,9 +56,9 @@ html {
 
 body {
 
-   /* background-color: var(--light-bg); */
-   background: linear-gradient(to right, #B3D8E0, #5899E2, #296090);
-   height: 100vh;
+   background-color: var(--light-bg);
+   /* background: linear-gradient(to right, #B3D8E0, #5899E2, #296090);
+   height: 100vh; */
 }
 
 section {

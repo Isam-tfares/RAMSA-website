@@ -30,7 +30,7 @@ function editClient()
         header("location:index.php");
         exit;
     }
-    if (isset($_POST['nom']) && !empty($_POST['nom']) && isset($_POST['prenom']) && !empty($_POST['prenom']) && isset($_POST['email']) && !empty($_POST['email']) && isset($_POST['tel']) && !empty($_POST['tel']) && isset($_POST['adresse']) && !empty($_POST['adresse']) && isset($_POST['password']) && !empty($_POST['password'])) {
+    if (isset($_POST['nom']) && !empty($_POST['nom']) && isset($_POST['prenom']) && !empty($_POST['prenom']) && isset($_POST['email']) && !empty($_POST['email']) && isset($_POST['tel']) && !empty($_POST['tel']) && isset($_POST['adresse']) && !empty($_POST['adresse'])) {
         $res = update($_POST);
         if ($res) {
             $content = $_SESSION['admin']['email'] . " a modifié les infos du client " . $_POST['nom'] . " " . $_POST['prenom'];

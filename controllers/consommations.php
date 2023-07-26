@@ -26,6 +26,40 @@ function getConsommationsOfLM()
     $consommations = getConsommationsOfLastMonth($lastMonthNumber, $lastMonthYear);
     return $consommations;
 }
+function getConsommationsOfLMTest()
+{
+    if (!isset($_SESSION['admin'])) {
+        header("location:index.php");
+        exit;
+    }
+
+    $currentMonth = date('n');
+    $currentYear = date('Y');
+    if ($currentMonth == 1) {
+        $month = 12;
+        $year = $currentYear - 1;
+        $month2 = 11;
+        $year2 = $currentYear - 1;
+    } elseif ($currentMonth == 2) {
+        $month = 1;
+        $year = $currentYear;
+        $month2 = 12;
+        $year2 = $currentYear - 1;
+    } else {
+        $month = $currentMonth - 1;
+        $year = $currentYear;
+        $month2 = $currentMonth - 2;
+        $year2 = $currentYear;
+    }
+    $contrats = getActivesContartsHaveConsommations($month, $year);
+    $consommations = [];
+    foreach ($contrats as $contrat) {
+        $consommation = getConsommationOfMounthAndYearOfContrat($month2, $year2, $contrat['contrat_id']);
+        $contrat['consommation_index2'] = $consommation ? $consommation['consommation_index2'] : 0;
+        $consommations[] = $contrat;
+    }
+    return $consommations;
+}
 function getYears()
 {
     if (!isset($_SESSION['admin'])) {
@@ -62,7 +96,7 @@ function addConsommation() // Add facture
     }
     $contrat_id = $_POST['contrat_id'];
     $index2 = $_POST['index2'];
-    $index1 = getLastIndex($contrat_id);
+    $index1 = getLastIndex($contrat_id) ? getLastIndex($contrat_id) : 0;
 
     $currentMonth = date('n');
     $currentYear = date('Y');
@@ -82,7 +116,7 @@ function addConsommation() // Add facture
                 $consommation_id = $res;
                 $adresse = getContrat($contrat_id)['adresse_local'];
                 $result = insertFacture($montant, $consommation_id, $contrat_id);
-                $content = $_SESSION['admin']['email'] . " a enregistrer la consommation du  client " . $_POST['nom'] . " " . $_POST['prenom'] . " pour l'adresse " . $adresse . " et pour la date " . $mounth . "/" . $year;
+                $content = $_SESSION['admin']['email'] . " a enregistrer la consommation n° " . $consommation_id .  " pour l'adresse " . $adresse . " et pour la date " . $mounth . "/" . $year;
                 insertActivityAdmin($content, $_SESSION['admin']['id']);
             }
             RedirectwithPost("index.php?page=consommations", $res && $result);
@@ -106,7 +140,7 @@ function editConsommation() // Update facture
 
     $result = updateFactureMontant($_POST['consommation_id'], $montant);
     $adresse = getContrat(getConsommation($_POST['consommation_id'])['contrat_id'])['adresse_local'];
-    $content = $_SESSION['admin']['email'] . " a modifié la consommation du  client " . $_POST['nom'] . " " . $_POST['prenom'] . " pour l'adresse " . $adresse . " et pour consommation_id " . $_POST['consommation_id'];
+    $content = $_SESSION['admin']['email'] . " a modifié la consommation n° " . $_POST['consommation_id'];
     insertActivityAdmin($content, $_SESSION['admin']['id']);
     RedirectwithPost("index.php?page=consommations", $res);
 }
@@ -121,7 +155,16 @@ function getConsommationsOfCM()
         $lastMonthNumber = $currentMonth - 1;
         $lastMonthYear = $currentYear;
     }
-    return getConsommationsOfCMDB($lastMonthNumber, $lastMonthYear);
+    $contrats = getActivesContartsHaveConsommations($lastMonthNumber, $lastMonthYear);
+    $consommations = [];
+    foreach ($contrats as $contrat) {
+        $consommation = getConsommationOfMounthAndYearOfContrat($lastMonthNumber, $lastMonthYear, $contrat['contrat_id']);
+        $contrat['consommation_index1'] = $consommation ? $consommation['consommation_index1'] : NULL;
+        $contrat['consommation_index2'] = $consommation ? $consommation['consommation_index2'] : NULL;
+        $contrat['consommation_id'] = $consommation ? $consommation['consommation_id'] : NULL;
+        $consommations[] = $contrat;
+    }
+    return $consommations;
 }
 function ConsommationsAreInserted()
 {
@@ -134,7 +177,13 @@ function ConsommationsAreInserted()
         $month = $currentMonth - 1;
         $year = $currentYear;
     }
-    $consommations = getAllConsommationsOfLM($month, $year);
-    $contrats = getActivesContartsHaveConsommations();
-    return count($consommations) == count($contrats);
+    $contrats = getActivesContartsHaveConsommations($month, $year);
+    $check = true;
+    foreach ($contrats as $contrat) {
+        $consommation = getConsommationOfMounthAndYearOfContrat($month, $year, $contrat['contrat_id']);
+        if (!$consommation) {
+            $check = false;
+        }
+    }
+    return $check;
 }

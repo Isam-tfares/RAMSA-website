@@ -25,15 +25,37 @@ $messages = getMessages(); // get Réclamations from back
                         <td class="text-start"><?= $message['message_content'] ?></td>
                         <td class="d-flex justify-content-evenly py-2">
                             <?php if ($message['message_statut'] == 0) { ?>
-                                <form action="?page=updateMessage" method="post" class="mx-2">
-                                    <input type="hidden" name="message_id" value="<?= $message['message_id'] ?>">
-                                    <button type="submit" class="status btn delivered border-none" style="width: 70px;">Recu <i class="bi bi-check-lg"></i></button>
-                                </form>
+
+                                <button type="button" class="status btn delivered border-none" style="width: 70px;" data-bs-toggle="modal" data-bs-target="#repondre<?= $message['message_id'] ?>">Répondre</button>
                             <?php } ?>
-                            <form action="?page=deleteMessage" method="post">
+                            <!-- modal for edit student datas -->
+                            <div class="modal fade" id="repondre<?= $message['message_id']  ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title text-dark" id="exampleModalLabel">Répondre a une réclamation
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="?page=updateMessage" method="post">
+                                                <input type="hidden" name="message_id" value="<?= $message['message_id'] ?>">
+                                                <div class="form-outline mb-4">
+                                                    <label class="form-label text-start text-dark" for="form5Example1">Réponse</label>
+                                                    <textarea type="text" id="form5Example1" class="form-control" name="reponse" id="" value="" required rows="6"></textarea>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary btn-block mb-4">Répondre</button>
+                                            </form>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <form action="?page=deleteMessage" method="post">
                                 <input type="hidden" name="message_id" value="<?= $message['message_id'] ?>">
                                 <button type="submit" class="status btn return border-none" onclick="return confirm('Êtes-vous sûr de vouloir Supprimer ce message ?');">Supprimer</button>
-                            </form>
+                            </form> -->
                         </td>
                     </tr>
                 <?php } ?>

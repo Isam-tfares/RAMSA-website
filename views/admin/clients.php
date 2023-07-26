@@ -151,7 +151,7 @@ $clients = clients();
                                             </div>
                                             <div class="form-outline mb-4">
                                                 <label class="form-label" for="form5Example1">mot de passe</label>
-                                                <input type="text" id="form5Example1" class="form-control" name="password" id="" value="<?= $client['password'] ?>" required />
+                                                <input type="text" id="form5Example1" class="form-control" name="password" id="" placeholder="Entrer le mot de passe si vous voulez le changer" />
 
                                             </div>
 
